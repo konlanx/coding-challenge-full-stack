@@ -9,6 +9,7 @@ import {
     TableHeader,
     TableRow,
 } from '../components/ui/table';
+import { OwnersList } from '../components/OwnersList';
 
 function formatCurrency(value: number): string {
     return new Intl.NumberFormat('en-US', {
@@ -110,25 +111,16 @@ export function DealsPage() {
                                 <TableRow>
                                     <TableHead>Name</TableHead>
                                     <TableHead>Value</TableHead>
-                                    <TableHead className="hidden sm:table-cell">Owners</TableHead>
-                                    <TableHead className="hidden md:table-cell">
-                                        Split Details
-                                    </TableHead>
+                                    <TableHead>Owners</TableHead>
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
                                 {deals.map((deal) => (
                                     <TableRow key={deal.id}>
-                                        <TableCell className="font-medium">{deal.name}</TableCell>
-                                        <TableCell>{formatCurrency(deal.value)}</TableCell>
-                                        <TableCell className="hidden sm:table-cell">
-                                            {deal.owners.length}{' '}
-                                            {deal.owners.length === 1 ? 'owner' : 'owners'}
-                                        </TableCell>
-                                        <TableCell className="hidden md:table-cell">
-                                            {deal.owners
-                                                .map((owner) => `${owner.percentage}%`)
-                                                .join(', ')}
+                                        <TableCell className="font-medium align-top">{deal.name}</TableCell>
+                                        <TableCell className="align-top">{formatCurrency(deal.value)}</TableCell>
+                                        <TableCell className="align-top">
+                                            <OwnersList owners={deal.owners} currentEmployeeId={ownerId} />
                                         </TableCell>
                                     </TableRow>
                                 ))}

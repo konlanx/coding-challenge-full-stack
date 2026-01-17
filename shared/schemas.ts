@@ -10,6 +10,11 @@ export const DealOwnerSchema = z.object({
     dealId: z.string(),
     employeeId: z.string(),
     percentage: z.number(),
+    employee: z.object({
+        id: z.string(),
+        firstName: z.string(),
+        lastName: z.string(),
+    }),
 });
 
 export const DealSchema = z.object({

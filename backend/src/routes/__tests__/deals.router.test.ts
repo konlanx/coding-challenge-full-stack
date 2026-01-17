@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { dealsRouter } from '../deals.router';
+import { createDealHandler, updateDealHandler, deleteDealHandler, getDealsHandler } from '../deals';
 
 vi.mock('../../prisma', () => ({
     prisma: {
@@ -21,11 +21,6 @@ vi.mock('../../prisma', () => ({
 }));
 
 import { prisma } from '../../prisma';
-
-const createDealHandler = dealsRouter.createDeal;
-const updateDealHandler = dealsRouter.updateDeal;
-const deleteDealHandler = dealsRouter.deleteDeal;
-const getDealsHandler = dealsRouter.getDeals;
 
 describe('createDeal', () => {
     beforeEach(() => {
@@ -413,7 +408,15 @@ describe('getDeals', () => {
 
         expect(prisma.deal.findMany).toHaveBeenCalledWith({
             where: { owners: { some: { employeeId: 'emp-123' } } },
-            include: { owners: true },
+            include: {
+                owners: {
+                    include: {
+                        employee: {
+                            select: { id: true, firstName: true, lastName: true },
+                        },
+                    },
+                },
+            },
         });
         expect(result.status).toBe(200);
         expect(result.body).toEqual(mockDeals);
