@@ -32,6 +32,14 @@ function formatCurrency(value: number): string {
     }).format(value);
 }
 
+function formatDate(dateString: string): string {
+    return new Date(dateString).toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+    });
+}
+
 export function DealsPage() {
     const { ownerId } = useParams<{ ownerId: string }>();
     const navigate = useNavigate();
@@ -185,6 +193,7 @@ export function DealsPage() {
                                 <TableRow>
                                     <TableHead>Name</TableHead>
                                     <TableHead>Value</TableHead>
+                                    <TableHead>Close Date</TableHead>
                                     <TableHead>Owners</TableHead>
                                     <TableHead className="w-16"></TableHead>
                                 </TableRow>
@@ -194,6 +203,7 @@ export function DealsPage() {
                                     <TableRow key={deal.id}>
                                         <TableCell className="font-medium align-top">{deal.name}</TableCell>
                                         <TableCell className="align-top">{formatCurrency(deal.value)}</TableCell>
+                                        <TableCell className="align-top">{formatDate(deal.closeDate)}</TableCell>
                                         <TableCell className="align-top">
                                             <OwnersList owners={deal.owners} currentEmployeeId={ownerId} />
                                         </TableCell>

@@ -11,12 +11,13 @@ export const createDealHandler = async ({ body }: { body: unknown }) => {
         };
     }
 
-    const { name, value, owners } = result.data;
+    const { name, value, closeDate, owners } = result.data;
     const deal = await prisma.deal.create({
         data: {
             id: crypto.randomUUID(),
             name,
             value,
+            closeDate: new Date(closeDate),
             owners: {
                 create: owners.map((owner) => ({
                     id: crypto.randomUUID(),
@@ -38,6 +39,9 @@ export const createDealHandler = async ({ body }: { body: unknown }) => {
 
     return {
         status: 201 as const,
-        body: deal,
+        body: {
+            ...deal,
+            closeDate: deal.closeDate.toISOString(),
+        },
     };
 };

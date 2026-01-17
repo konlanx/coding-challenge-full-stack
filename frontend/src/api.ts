@@ -1,5 +1,5 @@
 import { initClient } from '@ts-rest/core';
-import { dealsContract, organizationsContract, incentivesContract } from '@shared/contract';
+import { dealsContract, organizationsContract, incentivesContract, earningsContract } from '@shared/contract';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000';
 
@@ -18,4 +18,9 @@ export const incentivesClient = initClient(incentivesContract, {
     baseHeaders: {},
 });
 
-export type { Deal, DealOwner, Organization, Employee, Incentive, Beneficiary } from '@shared/schemas';
+export const earningsClient = initClient(earningsContract, {
+    baseUrl: API_BASE_URL,
+    baseHeaders: {},
+});
+
+export type { Deal, DealOwner, Organization, Employee, Incentive, Beneficiary, Earning } from '@shared/schemas';

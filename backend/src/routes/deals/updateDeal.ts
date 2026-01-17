@@ -25,7 +25,7 @@ export const updateDealHandler = async ({
         };
     }
 
-    const { name, value, owners } = bodyResult.data;
+    const { name, value, closeDate, owners } = bodyResult.data;
     const deal = await prisma.$transaction(async (transaction) => {
         await transaction.dealOwner.deleteMany({ where: { dealId: id } });
         return transaction.deal.update({
@@ -33,6 +33,7 @@ export const updateDealHandler = async ({
             data: {
                 name,
                 value,
+                closeDate: new Date(closeDate),
                 owners: {
                     create: owners.map((owner) => ({
                         id: crypto.randomUUID(),
@@ -55,6 +56,9 @@ export const updateDealHandler = async ({
 
     return {
         status: 200 as const,
-        body: deal,
+        body: {
+            ...deal,
+            closeDate: deal.closeDate.toISOString(),
+        },
     };
 };

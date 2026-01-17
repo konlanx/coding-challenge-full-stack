@@ -54,6 +54,7 @@ export function DealDialog({
     const isEditMode = !!deal;
     const [name, setName] = useState('');
     const [value, setValue] = useState('');
+    const [closeDate, setCloseDate] = useState('');
     const [owners, setOwners] = useState<OwnerEntry[]>([]);
     const [employees, setEmployees] = useState<Employee[]>([]);
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -75,6 +76,7 @@ export function DealDialog({
             if (deal) {
                 setName(deal.name);
                 setValue(deal.value.toString());
+                setCloseDate(deal.closeDate.split('T')[0]);
                 setOwners(
                     deal.owners.map((o) => ({
                         id: crypto.randomUUID(),
@@ -92,6 +94,7 @@ export function DealDialog({
                 ]);
                 setName('');
                 setValue('');
+                setCloseDate(new Date().toISOString().split('T')[0]);
             }
         }
     }, [open, currentEmployeeId, deal]);
@@ -106,11 +109,12 @@ export function DealDialog({
     const isValid = useMemo(() => {
         if (!name.trim()) return false;
         if (!value || parseFloat(value) <= 0) return false;
+        if (!closeDate) return false;
         if (owners.length === 0) return false;
         if (owners.some((o) => !o.employeeId)) return false;
         if (owners.some((o) => !o.percentage || o.percentage.trim() === '')) return false;
         return Math.abs(totalPercentage - 100) < 0.01;
-    }, [name, value, owners, totalPercentage]);
+    }, [name, value, closeDate, owners, totalPercentage]);
 
     const addOwner = () => {
         setOwners([
@@ -143,6 +147,7 @@ export function DealDialog({
             const payload = {
                 name: name.trim(),
                 value: parseFloat(value),
+                closeDate: new Date(closeDate).toISOString(),
                 owners: owners.map((o) => ({
                     employeeId: o.employeeId,
                     percentage: parseFloat(o.percentage) / 100,
@@ -199,22 +204,40 @@ export function DealDialog({
                 <div className="space-y-4 py-4">
                     <div className="grid grid-cols-2 gap-4">
                         <div className="space-y-2">
-                            <label className="text-sm font-medium">Deal Name</label>
+                            <label className="text-sm font-medium">
+                                Deal Name <span className="text-red-500">*</span>
+                            </label>
                             <Input
                                 placeholder="Enter deal name"
                                 value={name}
                                 onChange={(e) => setName(e.target.value)}
+                                className={!name.trim() ? 'border-red-500 focus-visible:ring-red-500' : ''}
                             />
                         </div>
                         <div className="space-y-2">
-                            <label className="text-sm font-medium">Value ($)</label>
+                            <label className="text-sm font-medium">
+                                Value ($) <span className="text-red-500">*</span>
+                            </label>
                             <Input
                                 type="number"
                                 placeholder="0.00"
                                 value={value}
                                 onChange={(e) => setValue(e.target.value)}
+                                className={!value || parseFloat(value) <= 0 ? 'border-red-500 focus-visible:ring-red-500' : ''}
                             />
                         </div>
+                    </div>
+
+                    <div className="space-y-2">
+                        <label className="text-sm font-medium">
+                            Close Date <span className="text-red-500">*</span>
+                        </label>
+                        <Input
+                            type="date"
+                            value={closeDate}
+                            onChange={(e) => setCloseDate(e.target.value)}
+                            className={!closeDate ? 'border-red-500 focus-visible:ring-red-500' : ''}
+                        />
                     </div>
 
                     <div className="space-y-2">

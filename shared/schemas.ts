@@ -21,6 +21,7 @@ export const DealSchema = z.object({
     id: z.string(),
     name: z.string(),
     value: z.number(),
+    closeDate: z.string(),
     owners: z.array(DealOwnerSchema),
 });
 
@@ -38,6 +39,7 @@ const ownersArraySchema = z
 export const CreateDealSchema = z.object({
     name: z.string().min(1),
     value: z.number().positive(),
+    closeDate: z.iso.datetime({ message: 'Invalid close date format' }),
     owners: ownersArraySchema,
 });
 
@@ -107,3 +109,15 @@ export type Beneficiary = z.infer<typeof BeneficiarySchema>;
 export type Incentive = z.infer<typeof IncentiveSchema>;
 export type CreateIncentiveInput = z.infer<typeof CreateIncentiveSchema>;
 export type UpdateIncentiveInput = z.infer<typeof UpdateIncentiveSchema>;
+
+// Earning schema - aggregated earnings per employee per incentive
+export const EarningSchema = z.object({
+    employeeId: z.string(),
+    employeeName: z.string(),
+    incentiveId: z.string(),
+    incentiveName: z.string(),
+    totalEarning: z.number(),
+    dealCount: z.number(),
+});
+
+export type Earning = z.infer<typeof EarningSchema>;

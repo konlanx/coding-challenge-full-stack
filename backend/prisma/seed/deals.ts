@@ -1,17 +1,17 @@
 import { PrismaClient } from '../../generated/prisma/client';
 
-// Deals with various values
+// Deals with various values and close dates
 export const deals = [
-    { id: '550e8400-e29b-41d4-a716-446655440100', name: 'Enterprise SaaS Platform', value: 150000 },
-    { id: '550e8400-e29b-41d4-a716-446655440101', name: 'Cloud Migration Project', value: 85000 },
-    { id: '550e8400-e29b-41d4-a716-446655440102', name: 'Security Audit & Compliance', value: 45000 },
-    { id: '550e8400-e29b-41d4-a716-446655440103', name: 'Mobile App Development', value: 120000 },
-    { id: '550e8400-e29b-41d4-a716-446655440104', name: 'Data Analytics Dashboard', value: 65000 },
-    { id: '550e8400-e29b-41d4-a716-446655440105', name: 'API Integration Suite', value: 38000 },
-    { id: '550e8400-e29b-41d4-a716-446655440106', name: 'DevOps Pipeline Setup', value: 28000 },
-    { id: '550e8400-e29b-41d4-a716-446655440107', name: 'CRM Implementation', value: 95000 },
-    { id: '550e8400-e29b-41d4-a716-446655440108', name: 'AI Chatbot Solution', value: 72000 },
-    { id: '550e8400-e29b-41d4-a716-446655440109', name: 'E-commerce Platform', value: 180000 },
+    { id: '550e8400-e29b-41d4-a716-446655440100', name: 'Enterprise SaaS Platform', value: 150000, closeDate: new Date('2026-01-15') },
+    { id: '550e8400-e29b-41d4-a716-446655440101', name: 'Cloud Migration Project', value: 85000, closeDate: new Date('2026-02-10') },
+    { id: '550e8400-e29b-41d4-a716-446655440102', name: 'Security Audit & Compliance', value: 45000, closeDate: new Date('2026-03-20') },
+    { id: '550e8400-e29b-41d4-a716-446655440103', name: 'Mobile App Development', value: 120000, closeDate: new Date('2026-01-28') },
+    { id: '550e8400-e29b-41d4-a716-446655440104', name: 'Data Analytics Dashboard', value: 65000, closeDate: new Date('2026-04-05') },
+    { id: '550e8400-e29b-41d4-a716-446655440105', name: 'API Integration Suite', value: 38000, closeDate: new Date('2026-05-12') },
+    { id: '550e8400-e29b-41d4-a716-446655440106', name: 'DevOps Pipeline Setup', value: 28000, closeDate: new Date('2026-02-25') },
+    { id: '550e8400-e29b-41d4-a716-446655440107', name: 'CRM Implementation', value: 95000, closeDate: new Date('2026-03-10') },
+    { id: '550e8400-e29b-41d4-a716-446655440108', name: 'AI Chatbot Solution', value: 72000, closeDate: new Date('2026-06-01') },
+    { id: '550e8400-e29b-41d4-a716-446655440109', name: 'E-commerce Platform', value: 180000, closeDate: new Date('2026-02-28') },
 ];
 
 // Employee ID references

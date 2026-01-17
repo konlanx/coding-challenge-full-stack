@@ -21,7 +21,7 @@ All the expected technology has been used, even though I am unfamiliar with some
 
 The UI structure has been altered slightly, such that a dashboard is loaded on the landing page where the user can select an organisation, sees the employees of that organisation and can open their deals and earnings reports from there. This choice has been made in favor of better usability. This does not impact the scope of the functionality.
 
-## Review instructions
+## Testing instructions
 
 
 

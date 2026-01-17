@@ -26,6 +26,15 @@ import { Avatar, AvatarFallback } from '../components/ui/avatar';
 import { getInitials, formatPercentage } from '../lib/utils';
 import { IncentiveDialog } from '../components/IncentiveDialog';
 
+function formatDate(dateString: string | null): string {
+    if (!dateString) return '—';
+    return new Date(dateString).toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+    });
+}
+
 export function IncentivesPage() {
     const { orgId } = useParams<{ orgId: string }>();
     const navigate = useNavigate();
@@ -165,6 +174,8 @@ export function IncentivesPage() {
                                 <TableRow>
                                     <TableHead>Name</TableHead>
                                     <TableHead>Commission</TableHead>
+                                    <TableHead>Start Date</TableHead>
+                                    <TableHead>End Date</TableHead>
                                     <TableHead>Beneficiaries</TableHead>
                                     <TableHead>Status</TableHead>
                                     <TableHead className="w-16"></TableHead>
@@ -185,6 +196,12 @@ export function IncentivesPage() {
                                         </TableCell>
                                         <TableCell className="align-top">
                                             {formatPercentage(incentive.commissionPercentage)}
+                                        </TableCell>
+                                        <TableCell className="align-top">
+                                            {formatDate(incentive.startDate)}
+                                        </TableCell>
+                                        <TableCell className="align-top">
+                                            {formatDate(incentive.endDate)}
                                         </TableCell>
                                         <TableCell className="align-top">
                                             {incentive.beneficiaries.length === 0 ? (

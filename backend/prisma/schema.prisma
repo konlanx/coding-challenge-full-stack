@@ -28,6 +28,7 @@ model Deal {
   id        String      @id @default(uuid())
   name      String
   value     Float
+  closeDate DateTime
   owners    DealOwner[]
 }
 

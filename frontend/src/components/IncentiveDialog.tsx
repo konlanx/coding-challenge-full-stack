@@ -99,8 +99,8 @@ export function IncentiveDialog({
         if (!name.trim()) return false;
         if (isPercentageInvalid(commissionPercentage)) return false;
         if (!startDate) return false;
-        if (isDateRangeInvalid()) return false;
-        return true;
+        return !isDateRangeInvalid();
+
     }, [name, commissionPercentage, startDate, isDateRangeInvalid]);
 
     const addBeneficiary = (employeeId: string) => {
@@ -193,7 +193,7 @@ export function IncentiveDialog({
                             />
                         </div>
                         <div className="space-y-2">
-                            <label className="text-sm font-medium">Commission (%)</label>
+                            <label className="text-sm font-medium">Commission (%) <span className="text-red-500">*</span></label>
                             <Input
                                 type="number"
                                 min="0"
@@ -218,12 +218,12 @@ export function IncentiveDialog({
 
                     <div className="grid grid-cols-3 gap-4">
                         <div className="space-y-2">
-                            <label className="text-sm font-medium">Start Date</label>
+                            <label className="text-sm font-medium">Start Date <span className="text-red-500">*</span></label>
                             <Input
                                 type="date"
                                 value={startDate}
                                 onChange={(e) => setStartDate(e.target.value)}
-                                className={isDateRangeInvalid() ? 'border-red-500 focus-visible:ring-red-500' : ''}
+                                className={!startDate || isDateRangeInvalid() ? 'border-red-500 focus-visible:ring-red-500' : ''}
                             />
                         </div>
                         <div className="space-y-2">

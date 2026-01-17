@@ -15,6 +15,9 @@ export const getDealsHandler = async ({ params: { ownerId } }: { params: { owner
     });
     return {
         status: 200 as const,
-        body: deals,
+        body: deals.map((deal) => ({
+            ...deal,
+            closeDate: deal.closeDate.toISOString(),
+        })),
     };
 };

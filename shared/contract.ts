@@ -9,6 +9,7 @@ import {
     IncentiveSchema,
     CreateIncentiveSchema,
     UpdateIncentiveSchema,
+    EarningSchema,
 } from './schemas';
 
 const c = initContract();
@@ -164,3 +165,31 @@ export const incentivesContract = c.router({
 });
 
 export type IncentivesContract = typeof incentivesContract;
+
+export const earningsContract = c.router({
+    getOrganizationEarnings: {
+        method: 'GET',
+        path: '/api/organizations/:orgId/earnings',
+        pathParams: z.object({
+            orgId: z.uuid(),
+        }),
+        responses: {
+            200: z.array(EarningSchema),
+        },
+        summary: 'Get all earnings for employees of an organization',
+    },
+    getEmployeeEarnings: {
+        method: 'GET',
+        path: '/api/employees/:employeeId/earnings',
+        pathParams: z.object({
+            employeeId: z.uuid(),
+        }),
+        responses: {
+            200: z.array(EarningSchema),
+            404: z.object({ error: z.string() }),
+        },
+        summary: 'Get all earnings for a specific employee',
+    },
+});
+
+export type EarningsContract = typeof earningsContract;
