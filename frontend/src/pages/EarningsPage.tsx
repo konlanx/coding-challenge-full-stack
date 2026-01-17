@@ -65,7 +65,6 @@ export function EarningsPage() {
         loadEarnings();
     }, [orgId]);
 
-    // Group earnings by employee
     const earningsByEmployee = useMemo(() => {
         const grouped: Record<string, EmployeeEarning> = {};
         for (const earning of earnings) {
@@ -83,7 +82,6 @@ export function EarningsPage() {
         return Object.values(grouped).sort((a, b) => b.totalEarning - a.totalEarning);
     }, [earnings]);
 
-    // Group earnings by incentive
     const earningsByIncentive = useMemo(() => {
         const grouped: Record<string, IncentiveEarning> = {};
         for (const earning of earnings) {

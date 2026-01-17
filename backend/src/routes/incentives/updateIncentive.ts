@@ -37,7 +37,6 @@ export const updateIncentiveHandler = async ({
         beneficiaryIds,
     } = bodyResult.data;
 
-    // Validate endDate is after startDate if provided
     if (endDate && new Date(endDate) <= new Date(startDate)) {
         return {
             status: 400 as const,

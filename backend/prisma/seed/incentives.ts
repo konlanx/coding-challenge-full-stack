@@ -1,6 +1,5 @@
 import { PrismaClient, IncentiveStatus, IncentiveType } from '../../generated/prisma/client';
 
-// Employee ID references
 const ALICE = '550e8400-e29b-41d4-a716-446655440010';
 const BOB = '550e8400-e29b-41d4-a716-446655440011';
 const CAROL = '550e8400-e29b-41d4-a716-446655440012';

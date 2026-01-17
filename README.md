@@ -60,6 +60,27 @@ This builds containers for both the `backend` and `frontend` components, as well
 The docker compose is zero configuration and does not need to be updated.
 The docker container automatically seeds its database.
 
+## Local development
+
+Create the respective `.env` files:
+
+```shell
+cp ./backend/.env.example ./backend/.env
+cp ./frontend/.env.example ./frontend/.env
+```
+
+Start the local applications by running the following command in both `backend` and `frontend`:
+
+```shell
+yarn dev
+```
+
+To seed the database, run
+
+```shell
+yarn db:seed
+```
+
 ## Preview
 
 ![Dashboard](images/dashboard.png)

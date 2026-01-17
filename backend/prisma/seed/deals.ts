@@ -1,6 +1,5 @@
 import { PrismaClient } from '../../generated/prisma/client';
 
-// Deals with various values and close dates
 export const deals = [
     { id: '550e8400-e29b-41d4-a716-446655440100', name: 'Enterprise SaaS Platform', value: 150000, closeDate: new Date('2026-01-15') },
     { id: '550e8400-e29b-41d4-a716-446655440101', name: 'Cloud Migration Project', value: 85000, closeDate: new Date('2026-02-10') },
@@ -14,51 +13,38 @@ export const deals = [
     { id: '550e8400-e29b-41d4-a716-446655440109', name: 'E-commerce Platform', value: 180000, closeDate: new Date('2026-02-28') },
 ];
 
-// Employee ID references
 const ALICE = '550e8400-e29b-41d4-a716-446655440010';
 const BOB = '550e8400-e29b-41d4-a716-446655440011';
 const CAROL = '550e8400-e29b-41d4-a716-446655440012';
 const DAVID = '550e8400-e29b-41d4-a716-446655440013';
 
-// Deal owners with various split percentages
-// Some deals have single owners (1.0), others have multiple owners with splits
 export const dealOwners = [
-    // Enterprise SaaS - solo deal for Alice
     { dealId: '550e8400-e29b-41d4-a716-446655440100', employeeId: ALICE, percentage: 1.0 },
 
-    // Cloud Migration - split between Bob and Carol
     { dealId: '550e8400-e29b-41d4-a716-446655440101', employeeId: BOB, percentage: 0.6 },
     { dealId: '550e8400-e29b-41d4-a716-446655440101', employeeId: CAROL, percentage: 0.4 },
 
-    // Security Audit - solo deal for Carol
     { dealId: '550e8400-e29b-41d4-a716-446655440102', employeeId: CAROL, percentage: 1.0 },
 
-    // Mobile App - three-way split
     { dealId: '550e8400-e29b-41d4-a716-446655440103', employeeId: ALICE, percentage: 0.4 },
     { dealId: '550e8400-e29b-41d4-a716-446655440103', employeeId: DAVID, percentage: 0.35 },
     { dealId: '550e8400-e29b-41d4-a716-446655440103', employeeId: BOB, percentage: 0.25 },
 
-    // Data Analytics - split between Alice and David
     { dealId: '550e8400-e29b-41d4-a716-446655440104', employeeId: ALICE, percentage: 0.5 },
     { dealId: '550e8400-e29b-41d4-a716-446655440104', employeeId: DAVID, percentage: 0.5 },
 
-    // API Integration - solo deal for David
     { dealId: '550e8400-e29b-41d4-a716-446655440105', employeeId: DAVID, percentage: 1.0 },
 
-    // DevOps Pipeline - split between Bob and David
     { dealId: '550e8400-e29b-41d4-a716-446655440106', employeeId: BOB, percentage: 0.7 },
     { dealId: '550e8400-e29b-41d4-a716-446655440106', employeeId: DAVID, percentage: 0.3 },
 
-    // CRM Implementation - solo deal for Bob
     { dealId: '550e8400-e29b-41d4-a716-446655440107', employeeId: BOB, percentage: 1.0 },
 
-    // AI Chatbot - four-way split (all team members)
     { dealId: '550e8400-e29b-41d4-a716-446655440108', employeeId: ALICE, percentage: 0.3 },
     { dealId: '550e8400-e29b-41d4-a716-446655440108', employeeId: BOB, percentage: 0.25 },
     { dealId: '550e8400-e29b-41d4-a716-446655440108', employeeId: CAROL, percentage: 0.25 },
     { dealId: '550e8400-e29b-41d4-a716-446655440108', employeeId: DAVID, percentage: 0.2 },
 
-    // E-commerce Platform - split between Carol and Alice
     { dealId: '550e8400-e29b-41d4-a716-446655440109', employeeId: CAROL, percentage: 0.55 },
     { dealId: '550e8400-e29b-41d4-a716-446655440109', employeeId: ALICE, percentage: 0.45 },
 ];
