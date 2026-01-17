@@ -7,7 +7,10 @@
   "scripts": {
     "build": "tsc",
     "start": "node dist/index.js",
-    "dev": "tsx watch index.ts"
+    "dev": "tsx watch index.ts",
+    "db:migrations:apply": "npx prisma generate",
+    "db:migrations:generate": "npx prisma migrate dev --name",
+    "db:seed": "npx tsx ./prisma/seed/seed.ts"
   },
   "packageManager": "yarn@4.12.0",
   "keywords": [],
