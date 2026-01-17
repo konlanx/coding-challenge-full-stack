@@ -82,3 +82,26 @@ export const updateDeal = async (req: Request, res: Response) => {
 
   res.json(deal);
 };
+
+export const deleteDeal = async (req: Request, res: Response) => {
+  const paramsResult = DealIdParamSchema.safeParse(req.params);
+  if (!paramsResult.success) {
+    res.status(400).json({ errors: z.treeifyError(paramsResult.error) });
+    return;
+  }
+
+  const { id } = paramsResult.data;
+
+  const existingDeal = await prisma.deal.findUnique({ where: { id } });
+  if (!existingDeal) {
+    res.status(404).json({ error: 'Deal not found' });
+    return;
+  }
+
+  await prisma.$transaction(async (transaction) => {
+    await transaction.dealOwner.deleteMany({ where: { dealId: id } });
+    await transaction.deal.delete({ where: { id } });
+  });
+
+  res.status(204).send();
+};

@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { Request, Response } from 'express';
-import { createDeal, updateDeal } from '../deals';
+import { createDeal, updateDeal, deleteDeal } from '../deals';
 
 vi.mock('../../prisma', () => ({
     prisma: {
@@ -8,12 +8,13 @@ vi.mock('../../prisma', () => ({
             create: vi.fn(),
             findUnique: vi.fn(),
             update: vi.fn(),
+            delete: vi.fn(),
         },
         dealOwner: {
             deleteMany: vi.fn(),
         },
         $transaction: vi.fn((fn: (tx: unknown) => Promise<unknown>) => fn({
-            deal: { update: vi.fn() },
+            deal: { update: vi.fn(), delete: vi.fn() },
             dealOwner: { deleteMany: vi.fn() },
         })),
     },
@@ -30,6 +31,7 @@ const mockResponse = (): Partial<Response> => {
     const res: Partial<Response> = {};
     res.status = vi.fn().mockReturnValue(res);
     res.json = vi.fn().mockReturnValue(res);
+    res.send = vi.fn().mockReturnValue(res);
     return res;
 };
 
@@ -360,5 +362,57 @@ describe('updateDeal', () => {
         await updateDeal(req as Request, res as Response);
 
         expect(res.json).toHaveBeenCalledWith(updatedDeal);
+    });
+});
+
+describe('deleteDeal', () => {
+    const validDealId = '550e8400-e29b-41d4-a716-446655440099';
+
+    beforeEach(() => {
+        vi.clearAllMocks();
+    });
+
+    it('should return 400 when id param is not a valid UUID', async () => {
+        const req = mockRequest({}, { id: 'not-a-uuid' });
+        const res = mockResponse();
+
+        await deleteDeal(req as Request, res as Response);
+
+        expect(res.status).toHaveBeenCalledWith(400);
+    });
+
+    it('should return 404 when deal does not exist', async () => {
+        vi.mocked(prisma.deal.findUnique).mockResolvedValue(null);
+
+        const req = mockRequest({}, { id: validDealId });
+        const res = mockResponse();
+
+        await deleteDeal(req as Request, res as Response);
+
+        expect(res.status).toHaveBeenCalledWith(404);
+        expect(res.json).toHaveBeenCalledWith({ error: 'Deal not found' });
+    });
+
+    it('should delete deal and return 204', async () => {
+        const existingDeal = { id: validDealId, name: 'Deal to Delete', value: 1000 };
+
+        vi.mocked(prisma.deal.findUnique).mockResolvedValue(existingDeal as any);
+        vi.mocked(prisma.$transaction).mockImplementation(async (fn: any) => {
+            const mockTx = {
+                dealOwner: { deleteMany: vi.fn().mockResolvedValue({ count: 1 }) },
+                deal: { delete: vi.fn().mockResolvedValue(existingDeal) },
+            };
+            return fn(mockTx);
+        });
+
+        const req = mockRequest({}, { id: validDealId });
+        const res = mockResponse();
+
+        await deleteDeal(req as Request, res as Response);
+
+        expect(prisma.deal.findUnique).toHaveBeenCalledWith({ where: { id: validDealId } });
+        expect(prisma.$transaction).toHaveBeenCalled();
+        expect(res.status).toHaveBeenCalledWith(204);
+        expect(res.send).toHaveBeenCalled();
     });
 });
