@@ -9,7 +9,6 @@ import {
 } from './ui/dialog';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
-import { Textarea } from './ui/textarea';
 import {
     Select,
     SelectContent,
@@ -21,6 +20,7 @@ import { Avatar, AvatarFallback } from './ui/avatar';
 import { incentivesClient, organizationsClient, type Employee, type Incentive } from '../api';
 import { toast } from 'sonner';
 import { getInitials, formatPercentageForInput, formatDateForInput, formatDateForApi } from '../lib/utils';
+import { Textarea } from './ui/textarea';
 
 interface IncentiveDialogProps {
     open: boolean;
@@ -184,11 +184,12 @@ export function IncentiveDialog({
                 <div className="space-y-4 py-4">
                     <div className="grid grid-cols-2 gap-4">
                         <div className="space-y-2">
-                            <label className="text-sm font-medium">Name</label>
+                            <label className="text-sm font-medium">Name <span className="text-red-500">*</span></label>
                             <Input
                                 placeholder="Enter incentive name"
                                 value={name}
                                 onChange={(e) => setName(e.target.value)}
+                                className={!name.trim() ? 'border-red-500 focus-visible:ring-red-500' : ''}
                             />
                         </div>
                         <div className="space-y-2">

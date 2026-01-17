@@ -18,7 +18,7 @@ export const dealsContract = c.router({
         method: 'GET',
         path: '/api/:ownerId/deals',
         pathParams: z.object({
-            ownerId: z.string(),
+            ownerId: z.uuid(),
         }),
         responses: {
             200: z.array(DealSchema),
@@ -77,7 +77,7 @@ export const organizationsContract = c.router({
         method: 'GET',
         path: '/api/organizations/:orgId/employees',
         pathParams: z.object({
-            orgId: z.string(),
+            orgId: z.uuid(),
         }),
         responses: {
             200: z.array(EmployeeSchema),
@@ -88,7 +88,7 @@ export const organizationsContract = c.router({
         method: 'GET',
         path: '/api/employees/:employeeId',
         pathParams: z.object({
-            employeeId: z.string(),
+            employeeId: z.uuid(),
         }),
         responses: {
             200: EmployeeSchema,
@@ -106,7 +106,7 @@ export const incentivesContract = c.router({
         method: 'GET',
         path: '/api/organizations/:orgId/incentives',
         pathParams: z.object({
-            orgId: z.string(),
+            orgId: z.uuid(),
         }),
         responses: {
             200: z.array(IncentiveSchema),
