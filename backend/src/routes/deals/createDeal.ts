@@ -14,16 +14,26 @@ export const createDealHandler = async ({ body }: { body: unknown }) => {
     const { name, value, owners } = result.data;
     const deal = await prisma.deal.create({
         data: {
+            id: crypto.randomUUID(),
             name,
             value,
             owners: {
                 create: owners.map((owner) => ({
+                    id: crypto.randomUUID(),
                     employeeId: owner.employeeId,
                     percentage: owner.percentage,
                 })),
             },
         },
-        include: { owners: true },
+        include: {
+            owners: {
+                include: {
+                    employee: {
+                        select: { id: true, firstName: true, lastName: true },
+                    },
+                },
+            },
+        },
     });
 
     return {

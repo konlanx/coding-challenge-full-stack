@@ -1,6 +1,6 @@
 import { useEffect, useState, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router';
-import { Trash2, ArrowLeft } from 'lucide-react';
+import { Trash2, ArrowLeft, Plus, Pencil } from 'lucide-react';
 import { toast } from 'sonner';
 import { incentivesClient, type Incentive } from '../api';
 import {
@@ -24,6 +24,7 @@ import {
 } from '../components/ui/alert-dialog';
 import { Avatar, AvatarFallback } from '../components/ui/avatar';
 import { getInitials, formatPercentage } from '../lib/utils';
+import { IncentiveDialog } from '../components/IncentiveDialog';
 
 export function IncentivesPage() {
     const { orgId } = useParams<{ orgId: string }>();
@@ -31,6 +32,8 @@ export function IncentivesPage() {
     const [incentives, setIncentives] = useState<Incentive[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
+    const [isDialogOpen, setIsDialogOpen] = useState(false);
+    const [incentiveToEdit, setIncentiveToEdit] = useState<Incentive | null>(null);
     const [incentiveToDelete, setIncentiveToDelete] = useState<Incentive | null>(null);
     const [isDeleting, setIsDeleting] = useState(false);
 
@@ -134,10 +137,21 @@ export function IncentivesPage() {
                         <ArrowLeft className="h-4 w-4 mr-2" />
                         Back to Dashboard
                     </Button>
-                    <h1 className="text-3xl font-bold tracking-tight">Incentives</h1>
-                    <p className="text-muted-foreground mt-2">
-                        Manage incentive plans and commission structures
-                    </p>
+                    <div className="flex items-start justify-between">
+                        <div>
+                            <h1 className="text-3xl font-bold tracking-tight">Incentives</h1>
+                            <p className="text-muted-foreground mt-2">
+                                Manage incentive plans and commission structures
+                            </p>
+                        </div>
+                        <Button onClick={() => {
+                            setIncentiveToEdit(null);
+                            setIsDialogOpen(true);
+                        }}>
+                            <Plus className="h-4 w-4 mr-2" />
+                            New Incentive
+                        </Button>
+                    </div>
                 </header>
 
                 {incentives.length === 0 ? (
@@ -214,14 +228,26 @@ export function IncentivesPage() {
                                             </span>
                                         </TableCell>
                                         <TableCell className="align-top">
-                                            <Button
-                                                variant="ghost"
-                                                size="icon"
-                                                className="text-destructive hover:text-destructive hover:bg-destructive/10"
-                                                onClick={() => setIncentiveToDelete(incentive)}
-                                            >
-                                                <Trash2 className="h-4 w-4" />
-                                            </Button>
+                                            <div className="flex gap-1">
+                                                <Button
+                                                    variant="ghost"
+                                                    size="icon"
+                                                    onClick={() => {
+                                                        setIncentiveToEdit(incentive);
+                                                        setIsDialogOpen(true);
+                                                    }}
+                                                >
+                                                    <Pencil className="h-4 w-4" />
+                                                </Button>
+                                                <Button
+                                                    variant="ghost"
+                                                    size="icon"
+                                                    className="text-destructive hover:text-destructive hover:bg-destructive/10"
+                                                    onClick={() => setIncentiveToDelete(incentive)}
+                                                >
+                                                    <Trash2 className="h-4 w-4" />
+                                                </Button>
+                                            </div>
                                         </TableCell>
                                     </TableRow>
                                 ))}
@@ -230,6 +256,17 @@ export function IncentivesPage() {
                     </div>
                 )}
             </div>
+
+            <IncentiveDialog
+                open={isDialogOpen}
+                onOpenChange={(open) => {
+                    setIsDialogOpen(open);
+                    if (!open) setIncentiveToEdit(null);
+                }}
+                organizationId={orgId}
+                onSuccess={loadIncentives}
+                incentive={incentiveToEdit}
+            />
 
             <AlertDialog
                 open={!!incentiveToDelete}

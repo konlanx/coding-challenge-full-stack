@@ -26,12 +26,7 @@ import {
 } from './ui/table';
 import { dealsClient, organizationsClient, type Employee, type Deal } from '../api';
 import { toast } from 'sonner';
-
-/** Format percentage to max 2 decimals, removing trailing zeros */
-function formatPercentage(value: number): string {
-    const rounded = Math.round(value * 100) / 100;
-    return rounded.toString();
-}
+import { formatPercentageForInput } from '../lib/utils';
 
 interface OwnerEntry {
     id: string;
@@ -45,7 +40,6 @@ interface DealDialogProps {
     currentEmployeeId: string;
     organizationId: string;
     onSuccess: () => void;
-    /** When provided, the dialog operates in edit mode */
     deal?: Deal | null;
 }
 
@@ -79,19 +73,16 @@ export function DealDialog({
     useEffect(() => {
         if (open) {
             if (deal) {
-                // Edit mode: populate from existing deal
                 setName(deal.name);
                 setValue(deal.value.toString());
                 setOwners(
                     deal.owners.map((o) => ({
                         id: crypto.randomUUID(),
                         employeeId: o.employeeId,
-                        // Convert from decimal (0-1) to percentage (0-100)
-                        percentage: formatPercentage(o.percentage * 100),
+                        percentage: formatPercentageForInput(o.percentage * 100),
                     }))
                 );
             } else if (currentEmployeeId) {
-                // Create mode: start with current employee as owner
                 setOwners([
                     {
                         id: crypto.randomUUID(),

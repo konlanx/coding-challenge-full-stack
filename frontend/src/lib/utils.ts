@@ -12,3 +12,16 @@ export function getInitials(firstName: string, lastName: string): string {
 export function formatPercentage(value: number): string {
   return `${(value * 100).toFixed(1)}%`;
 }
+
+export function formatPercentageForInput(value: number): string {
+  const rounded = Math.round(value * 100) / 100;
+  return rounded.toString();
+}
+
+export function formatDateForInput(isoString: string): string {
+  return isoString.split('T')[0];
+}
+
+export function formatDateForApi(dateString: string): string {
+  return new Date(dateString).toISOString();
+}

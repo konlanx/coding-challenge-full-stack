@@ -32,6 +32,7 @@ export const createIncentiveHandler = async ({ body }: { body: unknown }) => {
 
     const incentive = await prisma.incentive.create({
         data: {
+            id: crypto.randomUUID(),
             organizationId,
             name,
             description: description ?? null,

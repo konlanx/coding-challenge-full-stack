@@ -35,12 +35,21 @@ export const updateDealHandler = async ({
                 value,
                 owners: {
                     create: owners.map((owner) => ({
+                        id: crypto.randomUUID(),
                         employeeId: owner.employeeId,
                         percentage: owner.percentage,
                     })),
                 },
             },
-            include: { owners: true },
+            include: {
+                owners: {
+                    include: {
+                        employee: {
+                            select: { id: true, firstName: true, lastName: true },
+                        },
+                    },
+                },
+            },
         });
     });
 
