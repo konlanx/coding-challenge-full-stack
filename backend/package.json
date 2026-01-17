@@ -11,7 +11,9 @@
     "test": "vitest",
     "db:migrations:apply": "npx prisma generate",
     "db:migrations:generate": "npx prisma migrate dev --name",
-    "db:seed": "npx tsx ./prisma/seed/seed.ts"
+    "db:seed": "npx tsx ./prisma/seed/seed.ts",
+    "db:reset": "yarn prisma db push --force-reset",
+    "db:reseed": "yarn db:reset && yarn db:seed"
   },
   "packageManager": "yarn@4.12.0",
   "keywords": [],

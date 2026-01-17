@@ -2,32 +2,32 @@ import { PrismaClient } from '../../generated/prisma/client';
 
 export const employees = [
     {
-        id: 'emp-alice-johnson',
+        id: '550e8400-e29b-41d4-a716-446655440010',
         firstName: 'Alice',
         lastName: 'Johnson',
         email: 'alice.johnson@acme.com',
-        organizationId: 'org-acme-corp',
+        organizationId: '550e8400-e29b-41d4-a716-446655440001',
     },
     {
-        id: 'emp-bob-smith',
+        id: '550e8400-e29b-41d4-a716-446655440011',
         firstName: 'Bob',
         lastName: 'Smith',
         email: 'bob.smith@acme.com',
-        organizationId: 'org-acme-corp',
+        organizationId: '550e8400-e29b-41d4-a716-446655440001',
     },
     {
-        id: 'emp-carol-martinez',
+        id: '550e8400-e29b-41d4-a716-446655440012',
         firstName: 'Carol',
         lastName: 'Martinez',
         email: 'carol.martinez@acme.com',
-        organizationId: 'org-acme-corp',
+        organizationId: '550e8400-e29b-41d4-a716-446655440001',
     },
     {
-        id: 'emp-david-lee',
+        id: '550e8400-e29b-41d4-a716-446655440013',
         firstName: 'David',
         lastName: 'Lee',
         email: 'david.lee@acme.com',
-        organizationId: 'org-acme-corp',
+        organizationId: '550e8400-e29b-41d4-a716-446655440001',
     },
 ];
 

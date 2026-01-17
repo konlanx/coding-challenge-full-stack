@@ -24,7 +24,7 @@ function OwnerRow({ owner }: { owner: DealOwner }) {
                 {owner.employee.firstName} {owner.employee.lastName}
             </span>
             <span className="text-muted-foreground text-sm">
-                ({(owner.percentage).toFixed(0)}%)
+                ({(owner.percentage * 100).toFixed(0)}%)
             </span>
         </div>
     );

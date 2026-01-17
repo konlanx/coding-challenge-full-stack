@@ -1,9 +1,16 @@
 import { PrismaClient, IncentiveStatus, IncentiveType } from '../../generated/prisma/client';
 
+// Employee ID references
+const ALICE = '550e8400-e29b-41d4-a716-446655440010';
+const BOB = '550e8400-e29b-41d4-a716-446655440011';
+const CAROL = '550e8400-e29b-41d4-a716-446655440012';
+const DAVID = '550e8400-e29b-41d4-a716-446655440013';
+const ORG_ACME = '550e8400-e29b-41d4-a716-446655440001';
+
 export const incentives = [
     {
-        id: 'incentive-q1-sales-bonus',
-        organizationId: 'org-acme-corp',
+        id: '550e8400-e29b-41d4-a716-446655440200',
+        organizationId: ORG_ACME,
         name: 'Q1 Sales Bonus',
         description: 'Quarterly sales performance bonus for top performers',
         type: IncentiveType.DEAL_PARTICIPATION,
@@ -13,8 +20,8 @@ export const incentives = [
         status: IncentiveStatus.ACTIVE,
     },
     {
-        id: 'incentive-enterprise-accelerator',
-        organizationId: 'org-acme-corp',
+        id: '550e8400-e29b-41d4-a716-446655440201',
+        organizationId: ORG_ACME,
         name: 'Enterprise Deal Accelerator',
         description: 'Extra commission for closing enterprise-level deals over $100k',
         type: IncentiveType.DEAL_PARTICIPATION,
@@ -24,8 +31,8 @@ export const incentives = [
         status: IncentiveStatus.ACTIVE,
     },
     {
-        id: 'incentive-new-client-bonus',
-        organizationId: 'org-acme-corp',
+        id: '550e8400-e29b-41d4-a716-446655440202',
+        organizationId: ORG_ACME,
         name: 'New Client Acquisition Bonus',
         description: 'Bonus for bringing in new clients to the organization',
         type: IncentiveType.DEAL_PARTICIPATION,
@@ -37,20 +44,9 @@ export const incentives = [
 ];
 
 export const incentiveBeneficiaries: Record<string, string[]> = {
-    'incentive-q1-sales-bonus': [
-        'emp-alice-johnson',
-        'emp-bob-smith',
-        'emp-carol-martinez',
-        'emp-david-lee',
-    ],
-    'incentive-enterprise-accelerator': [
-        'emp-alice-johnson',
-        'emp-carol-martinez',
-    ],
-    'incentive-new-client-bonus': [
-        'emp-bob-smith',
-        'emp-david-lee',
-    ],
+    '550e8400-e29b-41d4-a716-446655440200': [ALICE, BOB, CAROL, DAVID],
+    '550e8400-e29b-41d4-a716-446655440201': [ALICE, CAROL],
+    '550e8400-e29b-41d4-a716-446655440202': [BOB, DAVID],
 };
 
 export async function seedIncentives(prisma: PrismaClient) {

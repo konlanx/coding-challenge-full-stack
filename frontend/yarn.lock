@@ -795,6 +795,38 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@radix-ui/react-dialog@npm:^1.1.15":
+  version: 1.1.15
+  resolution: "@radix-ui/react-dialog@npm:1.1.15"
+  dependencies:
+    "@radix-ui/primitive": "npm:1.1.3"
+    "@radix-ui/react-compose-refs": "npm:1.1.2"
+    "@radix-ui/react-context": "npm:1.1.2"
+    "@radix-ui/react-dismissable-layer": "npm:1.1.11"
+    "@radix-ui/react-focus-guards": "npm:1.1.3"
+    "@radix-ui/react-focus-scope": "npm:1.1.7"
+    "@radix-ui/react-id": "npm:1.1.1"
+    "@radix-ui/react-portal": "npm:1.1.9"
+    "@radix-ui/react-presence": "npm:1.1.5"
+    "@radix-ui/react-primitive": "npm:2.1.3"
+    "@radix-ui/react-slot": "npm:1.2.3"
+    "@radix-ui/react-use-controllable-state": "npm:1.2.2"
+    aria-hidden: "npm:^1.2.4"
+    react-remove-scroll: "npm:^2.6.3"
+  peerDependencies:
+    "@types/react": "*"
+    "@types/react-dom": "*"
+    react: ^16.8 || ^17.0 || ^18.0 || ^19.0 || ^19.0.0-rc
+    react-dom: ^16.8 || ^17.0 || ^18.0 || ^19.0 || ^19.0.0-rc
+  peerDependenciesMeta:
+    "@types/react":
+      optional: true
+    "@types/react-dom":
+      optional: true
+  checksum: 10/90ad9ea36d927a05bcc2701b471c2965f6d5d4f446511cd471e62235fc674186997dea081f52e18cb17a1e593828d94da3848e68864fa3acebe29df9b068b240
+  languageName: node
+  linkType: hard
+
 "@radix-ui/react-direction@npm:1.1.1":
   version: 1.1.1
   resolution: "@radix-ui/react-direction@npm:1.1.1"
@@ -925,6 +957,26 @@ __metadata:
     "@types/react-dom":
       optional: true
   checksum: 10/bd6be39bf021d5c917e2474ecba411e2625171f7ef96862b9af04bbd68833bb3662a7f1fbdeb5a7a237111b10e811e76d2cd03e957dadd6e668ef16541bfbd68
+  languageName: node
+  linkType: hard
+
+"@radix-ui/react-presence@npm:1.1.5":
+  version: 1.1.5
+  resolution: "@radix-ui/react-presence@npm:1.1.5"
+  dependencies:
+    "@radix-ui/react-compose-refs": "npm:1.1.2"
+    "@radix-ui/react-use-layout-effect": "npm:1.1.1"
+  peerDependencies:
+    "@types/react": "*"
+    "@types/react-dom": "*"
+    react: ^16.8 || ^17.0 || ^18.0 || ^19.0 || ^19.0.0-rc
+    react-dom: ^16.8 || ^17.0 || ^18.0 || ^19.0 || ^19.0.0-rc
+  peerDependenciesMeta:
+    "@types/react":
+      optional: true
+    "@types/react-dom":
+      optional: true
+  checksum: 10/4cdb05844c18877efb4b9739b46b7e5850b81d7ede994e75b5d62e8153a43c6e16b3ff9e55ff716e20b74b99b9415a94e97fd636bcb8698d5bbf7ab7b8663f9b
   languageName: node
   linkType: hard
 
@@ -3002,6 +3054,7 @@ __metadata:
   dependencies:
     "@eslint/js": "npm:^9.39.1"
     "@radix-ui/react-avatar": "npm:^1.1.11"
+    "@radix-ui/react-dialog": "npm:^1.1.15"
     "@radix-ui/react-select": "npm:^2.2.6"
     "@radix-ui/react-slot": "npm:^1.2.4"
     "@tailwindcss/vite": "npm:^4.1.17"
@@ -3017,10 +3070,12 @@ __metadata:
     eslint-plugin-react-refresh: "npm:^0.4.24"
     globals: "npm:^16.5.0"
     lucide-react: "npm:^0.556.0"
+    next-themes: "npm:^0.4.6"
     prettier: "npm:^3.7.4"
     react: "npm:^19.2.0"
     react-dom: "npm:^19.2.0"
     react-router: "npm:^7.10.1"
+    sonner: "npm:^2.0.7"
     tailwind-merge: "npm:^3.4.0"
     tailwindcss: "npm:^4.1.17"
     tw-animate-css: "npm:^1.4.0"
@@ -3051,6 +3106,16 @@ __metadata:
   version: 1.0.0
   resolution: "negotiator@npm:1.0.0"
   checksum: 10/b5734e87295324fabf868e36fb97c84b7d7f3156ec5f4ee5bf6e488079c11054f818290fc33804cef7b1ee21f55eeb14caea83e7dafae6492a409b3e573153e5
+  languageName: node
+  linkType: hard
+
+"next-themes@npm:^0.4.6":
+  version: 0.4.6
+  resolution: "next-themes@npm:0.4.6"
+  peerDependencies:
+    react: ^16.8 || ^17 || ^18 || ^19 || ^19.0.0-rc
+    react-dom: ^16.8 || ^17 || ^18 || ^19 || ^19.0.0-rc
+  checksum: 10/48540e77a8f1967fa27338e91037df296f84d8979ba3003f71eed8d9a2f4f29b3cc6797d27b501547fd39cf33611a2accb432eec92ad8a457abe1a142cc5a02e
   languageName: node
   linkType: hard
 
@@ -3496,6 +3561,16 @@ __metadata:
     ip-address: "npm:^10.0.1"
     smart-buffer: "npm:^4.2.0"
   checksum: 10/d19366c95908c19db154f329bbe94c2317d315dc933a7c2b5101e73f32a555c84fb199b62174e1490082a593a4933d8d5a9b297bde7d1419c14a11a965f51356
+  languageName: node
+  linkType: hard
+
+"sonner@npm:^2.0.7":
+  version: 2.0.7
+  resolution: "sonner@npm:2.0.7"
+  peerDependencies:
+    react: ^18.0.0 || ^19.0.0 || ^19.0.0-rc
+    react-dom: ^18.0.0 || ^19.0.0 || ^19.0.0-rc
+  checksum: 10/c80321646f7fe06f92f4c16da9d72a27aec34abbf41438f8d8e8292ba8546d6bb620c54a113928f049948db1ad29d0b2ad3e9cb29dd5802c30951b41c99f12c4
   languageName: node
   linkType: hard
 
