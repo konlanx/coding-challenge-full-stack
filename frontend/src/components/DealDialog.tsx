@@ -24,8 +24,14 @@ import {
     TableHeader,
     TableRow,
 } from './ui/table';
-import { dealsClient, organizationsClient, type Employee } from '../api';
+import { dealsClient, organizationsClient, type Employee, type Deal } from '../api';
 import { toast } from 'sonner';
+
+/** Format percentage to max 2 decimals, removing trailing zeros */
+function formatPercentage(value: number): string {
+    const rounded = Math.round(value * 100) / 100;
+    return rounded.toString();
+}
 
 interface OwnerEntry {
     id: string;
@@ -33,21 +39,25 @@ interface OwnerEntry {
     percentage: string;
 }
 
-interface AddDealDialogProps {
+interface DealDialogProps {
     open: boolean;
     onOpenChange: (open: boolean) => void;
     currentEmployeeId: string;
     organizationId: string;
     onSuccess: () => void;
+    /** When provided, the dialog operates in edit mode */
+    deal?: Deal | null;
 }
 
-export function AddDealDialog({
+export function DealDialog({
     open,
     onOpenChange,
     currentEmployeeId,
     organizationId,
     onSuccess,
-}: AddDealDialogProps) {
+    deal,
+}: DealDialogProps) {
+    const isEditMode = !!deal;
     const [name, setName] = useState('');
     const [value, setValue] = useState('');
     const [owners, setOwners] = useState<OwnerEntry[]>([]);
@@ -67,18 +77,33 @@ export function AddDealDialog({
     }, [open, organizationId]);
 
     useEffect(() => {
-        if (open && currentEmployeeId) {
-            setOwners([
-                {
-                    id: crypto.randomUUID(),
-                    employeeId: currentEmployeeId,
-                    percentage: '100',
-                },
-            ]);
-            setName('');
-            setValue('');
+        if (open) {
+            if (deal) {
+                // Edit mode: populate from existing deal
+                setName(deal.name);
+                setValue(deal.value.toString());
+                setOwners(
+                    deal.owners.map((o) => ({
+                        id: crypto.randomUUID(),
+                        employeeId: o.employeeId,
+                        // Convert from decimal (0-1) to percentage (0-100)
+                        percentage: formatPercentage(o.percentage * 100),
+                    }))
+                );
+            } else if (currentEmployeeId) {
+                // Create mode: start with current employee as owner
+                setOwners([
+                    {
+                        id: crypto.randomUUID(),
+                        employeeId: currentEmployeeId,
+                        percentage: '100',
+                    },
+                ]);
+                setName('');
+                setValue('');
+            }
         }
-    }, [open, currentEmployeeId]);
+    }, [open, currentEmployeeId, deal]);
 
     const totalPercentage = useMemo(() => {
         return owners.reduce((sum, owner) => {
@@ -124,26 +149,43 @@ export function AddDealDialog({
 
         setIsSubmitting(true);
         try {
-            const result = await dealsClient.createDeal({
-                body: {
-                    name: name.trim(),
-                    value: parseFloat(value),
-                    owners: owners.map((o) => ({
-                        employeeId: o.employeeId,
-                        percentage: parseFloat(o.percentage) / 100,
-                    })),
-                },
-            });
+            const payload = {
+                name: name.trim(),
+                value: parseFloat(value),
+                owners: owners.map((o) => ({
+                    employeeId: o.employeeId,
+                    percentage: parseFloat(o.percentage) / 100,
+                })),
+            };
 
-            if (result.status === 201) {
-                onOpenChange(false);
-                onSuccess();
-                toast.success('Deal created successfully');
+            if (isEditMode && deal) {
+                const result = await dealsClient.updateDeal({
+                    params: { id: deal.id },
+                    body: payload,
+                });
+
+                if (result.status === 200) {
+                    onOpenChange(false);
+                    onSuccess();
+                    toast.success('Deal updated successfully');
+                } else {
+                    toast.error('Failed to update deal');
+                }
             } else {
-                toast.error('Failed to create deal');
+                const result = await dealsClient.createDeal({
+                    body: payload,
+                });
+
+                if (result.status === 201) {
+                    onOpenChange(false);
+                    onSuccess();
+                    toast.success('Deal created successfully');
+                } else {
+                    toast.error('Failed to create deal');
+                }
             }
         } catch {
-            toast.error('Failed to create deal');
+            toast.error(isEditMode ? 'Failed to update deal' : 'Failed to create deal');
         } finally {
             setIsSubmitting(false);
         }
@@ -160,7 +202,7 @@ export function AddDealDialog({
         <Dialog open={open} onOpenChange={onOpenChange}>
             <DialogContent className="max-w-2xl">
                 <DialogHeader>
-                    <DialogTitle>Create New Deal</DialogTitle>
+                    <DialogTitle>{isEditMode ? 'Edit Deal' : 'Create New Deal'}</DialogTitle>
                 </DialogHeader>
 
                 <div className="space-y-4 py-4">
@@ -275,7 +317,9 @@ export function AddDealDialog({
                         Cancel
                     </Button>
                     <Button onClick={handleSubmit} disabled={!isValid || isSubmitting}>
-                        {isSubmitting ? 'Creating...' : 'Create Deal'}
+                        {isSubmitting
+                            ? (isEditMode ? 'Saving...' : 'Creating...')
+                            : (isEditMode ? 'Save Changes' : 'Create Deal')}
                     </Button>
                 </DialogFooter>
             </DialogContent>

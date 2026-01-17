@@ -1,6 +1,6 @@
 import { useEffect, useState, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router';
-import { Plus, Trash2, ArrowLeft } from 'lucide-react';
+import { Plus, Trash2, ArrowLeft, Pencil } from 'lucide-react';
 import { toast } from 'sonner';
 import { dealsClient, organizationsClient, type Deal, type Employee } from '../api';
 import {
@@ -23,7 +23,7 @@ import {
     AlertDialogTitle,
 } from '../components/ui/alert-dialog';
 import { OwnersList } from '../components/OwnersList';
-import { AddDealDialog } from '../components/AddDealDialog';
+import { DealDialog } from '../components/DealDialog';
 
 function formatCurrency(value: number): string {
     return new Intl.NumberFormat('en-US', {
@@ -39,7 +39,8 @@ export function DealsPage() {
     const [employee, setEmployee] = useState<Employee | null>(null);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
-    const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
+    const [isDialogOpen, setIsDialogOpen] = useState(false);
+    const [dealToEdit, setDealToEdit] = useState<Deal | null>(null);
     const [dealToDelete, setDealToDelete] = useState<Deal | null>(null);
     const [isDeleting, setIsDeleting] = useState(false);
 
@@ -163,7 +164,10 @@ export function DealsPage() {
                                 Manage and view all deals for this employee
                             </p>
                         </div>
-                        <Button onClick={() => setIsAddDialogOpen(true)}>
+                        <Button onClick={() => {
+                            setDealToEdit(null);
+                            setIsDialogOpen(true);
+                        }}>
                             <Plus className="h-4 w-4 mr-2" />
                             New Deal
                         </Button>
@@ -194,14 +198,26 @@ export function DealsPage() {
                                             <OwnersList owners={deal.owners} currentEmployeeId={ownerId} />
                                         </TableCell>
                                         <TableCell className="align-top">
-                                            <Button
-                                                variant="ghost"
-                                                size="icon"
-                                                className="text-destructive hover:text-destructive hover:bg-destructive/10"
-                                                onClick={() => setDealToDelete(deal)}
-                                            >
-                                                <Trash2 className="h-4 w-4" />
-                                            </Button>
+                                            <div className="flex gap-1">
+                                                <Button
+                                                    variant="ghost"
+                                                    size="icon"
+                                                    onClick={() => {
+                                                        setDealToEdit(deal);
+                                                        setIsDialogOpen(true);
+                                                    }}
+                                                >
+                                                    <Pencil className="h-4 w-4" />
+                                                </Button>
+                                                <Button
+                                                    variant="ghost"
+                                                    size="icon"
+                                                    className="text-destructive hover:text-destructive hover:bg-destructive/10"
+                                                    onClick={() => setDealToDelete(deal)}
+                                                >
+                                                    <Trash2 className="h-4 w-4" />
+                                                </Button>
+                                            </div>
                                         </TableCell>
                                     </TableRow>
                                 ))}
@@ -211,12 +227,16 @@ export function DealsPage() {
                 )}
             </div>
 
-            <AddDealDialog
-                open={isAddDialogOpen}
-                onOpenChange={setIsAddDialogOpen}
+            <DealDialog
+                open={isDialogOpen}
+                onOpenChange={(open) => {
+                    setIsDialogOpen(open);
+                    if (!open) setDealToEdit(null);
+                }}
                 currentEmployeeId={ownerId}
                 organizationId={employee?.organizationId ?? ''}
                 onSuccess={loadDeals}
+                deal={dealToEdit}
             />
 
             <AlertDialog open={!!dealToDelete} onOpenChange={(open) => !open && setDealToDelete(null)}>
