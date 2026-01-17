@@ -110,15 +110,14 @@ export function HomePage() {
                             </SelectContent>
                         </Select>
                     </div>
-                    {selectedOrgId && (
-                        <Button
-                            variant="outline"
-                            className="ml-auto"
-                            onClick={() => navigate(`/incentives/${selectedOrgId}`)}
-                        >
-                            Manage Incentives
-                        </Button>
-                    )}
+                    <Button
+                        variant="outline"
+                        className="ml-auto"
+                        disabled={!selectedOrgId}
+                        onClick={() => navigate(`/incentives/${selectedOrgId}`)}
+                    >
+                        Manage Incentives
+                    </Button>
                 </div>
 
                 {selectedOrgId && (
