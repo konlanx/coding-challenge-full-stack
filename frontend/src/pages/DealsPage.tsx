@@ -1,6 +1,6 @@
 import { useEffect, useState, useCallback } from 'react';
-import { useParams } from 'react-router';
-import { Plus, Trash2 } from 'lucide-react';
+import { useParams, useNavigate } from 'react-router';
+import { Plus, Trash2, ArrowLeft } from 'lucide-react';
 import { toast } from 'sonner';
 import { dealsClient, organizationsClient, type Deal, type Employee } from '../api';
 import {
@@ -34,6 +34,7 @@ function formatCurrency(value: number): string {
 
 export function DealsPage() {
     const { ownerId } = useParams<{ ownerId: string }>();
+    const navigate = useNavigate();
     const [deals, setDeals] = useState<Deal[]>([]);
     const [employee, setEmployee] = useState<Employee | null>(null);
     const [isLoading, setIsLoading] = useState(true);
@@ -143,19 +144,30 @@ export function DealsPage() {
     return (
         <div className="min-h-screen bg-background">
             <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-                <header className="mb-8 flex items-start justify-between">
-                    <div>
-                        <h1 className="text-3xl font-bold tracking-tight">
-                            Deals for {employeeName}
-                        </h1>
-                        <p className="text-muted-foreground mt-2">
-                            Manage and view all deals for this employee
-                        </p>
-                    </div>
-                    <Button onClick={() => setIsAddDialogOpen(true)}>
-                        <Plus className="h-4 w-4 mr-2" />
-                        New Deal
+                <header className="mb-8">
+                    <Button
+                        variant="ghost"
+                        size="sm"
+                        className="mb-4"
+                        onClick={() => navigate('/')}
+                    >
+                        <ArrowLeft className="h-4 w-4 mr-2" />
+                        Back to Dashboard
                     </Button>
+                    <div className="flex items-start justify-between">
+                        <div>
+                            <h1 className="text-3xl font-bold tracking-tight">
+                                Deals for {employeeName}
+                            </h1>
+                            <p className="text-muted-foreground mt-2">
+                                Manage and view all deals for this employee
+                            </p>
+                        </div>
+                        <Button onClick={() => setIsAddDialogOpen(true)}>
+                            <Plus className="h-4 w-4 mr-2" />
+                            New Deal
+                        </Button>
+                    </div>
                 </header>
 
                 {deals.length === 0 ? (

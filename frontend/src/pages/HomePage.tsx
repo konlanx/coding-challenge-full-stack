@@ -18,15 +18,16 @@ import {
     TableRow,
 } from '../components/ui/table';
 import { Button } from '../components/ui/button';
+import { getInitials } from '../lib/utils';
 
-function getInitials(firstName: string, lastName: string): string {
-    return `${firstName.charAt(0)}${lastName.charAt(0)}`.toUpperCase();
-}
+const SELECTED_ORG_STORAGE_KEY = 'selectedOrganizationId';
 
 export function HomePage() {
     const navigate = useNavigate();
     const [organizations, setOrganizations] = useState<Organization[]>([]);
-    const [selectedOrgId, setSelectedOrgId] = useState<string>('');
+    const [selectedOrgId, setSelectedOrgId] = useState<string>(() => {
+        return localStorage.getItem(SELECTED_ORG_STORAGE_KEY) || '';
+    });
     const [employees, setEmployees] = useState<Employee[]>([]);
     const [isLoadingOrgs, setIsLoadingOrgs] = useState(true);
     const [isLoadingEmployees, setIsLoadingEmployees] = useState(false);
@@ -45,6 +46,18 @@ export function HomePage() {
         };
         loadOrganizations();
     }, []);
+
+    useEffect(() => {
+        if (!selectedOrgId && organizations.length > 0) {
+            setSelectedOrgId(organizations[0].id);
+        }
+    }, [organizations, selectedOrgId]);
+
+    useEffect(() => {
+        if (selectedOrgId) {
+            localStorage.setItem(SELECTED_ORG_STORAGE_KEY, selectedOrgId);
+        }
+    }, [selectedOrgId]);
 
     useEffect(() => {
         if (!selectedOrgId) {
@@ -78,23 +91,34 @@ export function HomePage() {
                     </p>
                 </header>
 
-                <div className="mb-8 max-w-sm">
-                    <Select
-                        value={selectedOrgId}
-                        onValueChange={setSelectedOrgId}
-                        disabled={isLoadingOrgs}
-                    >
-                        <SelectTrigger>
-                            <SelectValue placeholder="Select an organization" />
-                        </SelectTrigger>
-                        <SelectContent>
-                            {organizations.map((org) => (
-                                <SelectItem key={org.id} value={org.id}>
-                                    {org.name}
-                                </SelectItem>
-                            ))}
-                        </SelectContent>
-                    </Select>
+                <div className="mb-8 flex items-center gap-4">
+                    <div className="max-w-sm flex-1">
+                        <Select
+                            value={selectedOrgId}
+                            onValueChange={setSelectedOrgId}
+                            disabled={isLoadingOrgs}
+                        >
+                            <SelectTrigger>
+                                <SelectValue placeholder="Select an organization" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                {organizations.map((org) => (
+                                    <SelectItem key={org.id} value={org.id}>
+                                        {org.name}
+                                    </SelectItem>
+                                ))}
+                            </SelectContent>
+                        </Select>
+                    </div>
+                    {selectedOrgId && (
+                        <Button
+                            variant="outline"
+                            className="ml-auto"
+                            onClick={() => navigate(`/incentives/${selectedOrgId}`)}
+                        >
+                            Manage Incentives
+                        </Button>
+                    )}
                 </div>
 
                 {selectedOrgId && (

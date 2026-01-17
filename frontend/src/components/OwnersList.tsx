@@ -1,15 +1,12 @@
 import { useState } from 'react';
 import { ChevronDown, ChevronUp } from 'lucide-react';
 import { Avatar, AvatarFallback } from './ui/avatar';
+import { getInitials } from '../lib/utils';
 import type { DealOwner } from '../api';
 
 interface OwnersListProps {
     owners: DealOwner[];
     currentEmployeeId: string;
-}
-
-function getInitials(firstName: string, lastName: string): string {
-    return `${firstName.charAt(0)}${lastName.charAt(0)}`.toUpperCase();
 }
 
 function OwnerRow({ owner }: { owner: DealOwner }) {
