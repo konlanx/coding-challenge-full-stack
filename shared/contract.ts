@@ -82,6 +82,18 @@ export const organizationsContract = c.router({
         },
         summary: 'Get all employees for an organization',
     },
+    getEmployee: {
+        method: 'GET',
+        path: '/api/employees/:employeeId',
+        pathParams: z.object({
+            employeeId: z.string(),
+        }),
+        responses: {
+            200: EmployeeSchema,
+            404: z.object({ error: z.string() }),
+        },
+        summary: 'Get a single employee by ID',
+    },
 });
 
 export type DealsContract = typeof dealsContract;

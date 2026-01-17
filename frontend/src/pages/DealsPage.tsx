@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router';
-import { dealsClient, type Deal } from '../api';
+import { dealsClient, organizationsClient, type Deal, type Employee } from '../api';
 import {
     Table,
     TableBody,
@@ -20,21 +20,31 @@ function formatCurrency(value: number): string {
 export function DealsPage() {
     const { ownerId } = useParams<{ ownerId: string }>();
     const [deals, setDeals] = useState<Deal[]>([]);
+    const [employee, setEmployee] = useState<Employee | null>(null);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
         if (!ownerId) return;
 
-        const loadDeals = async () => {
+        const loadData = async () => {
             try {
                 setIsLoading(true);
                 setError(null);
-                const result = await dealsClient.getDeals({ params: { ownerId } });
-                if (result.status === 200) {
-                    setDeals(result.body);
+
+                const [dealsResult, employeeResult] = await Promise.all([
+                    dealsClient.getDeals({ params: { ownerId } }),
+                    organizationsClient.getEmployee({ params: { employeeId: ownerId } }),
+                ]);
+
+                if (dealsResult.status === 200) {
+                    setDeals(dealsResult.body);
                 } else {
                     setError('Failed to load deals');
+                }
+
+                if (employeeResult.status === 200) {
+                    setEmployee(employeeResult.body);
                 }
             } catch (err) {
                 setError(err instanceof Error ? err.message : 'Failed to load deals');
@@ -43,7 +53,7 @@ export function DealsPage() {
             }
         };
 
-        loadDeals();
+        loadData();
     }, [ownerId]);
 
     if (!ownerId) {
@@ -73,13 +83,19 @@ export function DealsPage() {
         );
     }
 
+    const employeeName = employee
+        ? `${employee.firstName} ${employee.lastName}`
+        : 'Unknown';
+
     return (
         <div className="min-h-screen bg-background">
             <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
                 <header className="mb-8">
-                    <h1 className="text-3xl font-bold tracking-tight">Deals</h1>
+                    <h1 className="text-3xl font-bold tracking-tight">
+                        Deals for {employeeName}
+                    </h1>
                     <p className="text-muted-foreground mt-2">
-                        Manage and view all deals for this owner
+                        Manage and view all deals for this employee
                     </p>
                 </header>
 

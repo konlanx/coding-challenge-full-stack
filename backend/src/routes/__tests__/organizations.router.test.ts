@@ -29,12 +29,7 @@ describe('getOrganizations', () => {
         ];
         vi.mocked(prisma.organization.findMany).mockResolvedValue(mockOrganizations);
 
-        const result = await getOrganizationsHandler({
-            params: {},
-            query: {},
-            headers: {},
-            body: undefined,
-        } as any);
+        const result = await getOrganizationsHandler();
 
         expect(prisma.organization.findMany).toHaveBeenCalled();
         expect(result.status).toBe(200);
@@ -44,12 +39,7 @@ describe('getOrganizations', () => {
     it('should return empty array when no organizations exist', async () => {
         vi.mocked(prisma.organization.findMany).mockResolvedValue([]);
 
-        const result = await getOrganizationsHandler({
-            params: {},
-            query: {},
-            headers: {},
-            body: undefined,
-        } as any);
+        const result = await getOrganizationsHandler();
 
         expect(result.status).toBe(200);
         expect(result.body).toEqual([]);
