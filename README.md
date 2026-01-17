@@ -58,7 +58,7 @@ docker-compose up --build
 This builds containers for both the `backend` and `frontend` components, as well as initializes a PostgreSQL container.
 
 The docker compose is zero configuration and does not need to be updated.
-The docker container automatically seeds its database
+The docker container automatically seeds its database.
 
 ## Preview
 
