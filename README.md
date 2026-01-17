@@ -10,7 +10,7 @@ Generative AI (Claude Code Opus) has been used to aid with
 
 ## Architecture
 
-The structure remained the same with a `backend` and `frontend` folder. A new `shared` folder has been created, which now hosts the contracts between frontend.
+The structure remained the same with a `backend` and `frontend` folder. A new `shared` folder has been created, which now hosts the contracts between `frontend` and `backend`.
 
 The project now utilises `ts-rest` to enable fully typesafe communication between frontend and backend. All data is validated using `zod`.
 `ts-rest` is also being used to register routes and data handlers.
