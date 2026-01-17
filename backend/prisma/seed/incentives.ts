@@ -15,6 +15,7 @@ export const incentives = [
         description: 'Quarterly sales performance bonus for top performers',
         type: IncentiveType.DEAL_PARTICIPATION,
         commissionPercentage: 0.05,
+        basePercentage: 0, // No minimum ownership required
         startDate: new Date('2026-01-01'),
         endDate: new Date('2026-03-31'),
         status: IncentiveStatus.ACTIVE,
@@ -26,6 +27,7 @@ export const incentives = [
         description: 'Extra commission for closing enterprise-level deals over $100k',
         type: IncentiveType.DEAL_PARTICIPATION,
         commissionPercentage: 0.08,
+        basePercentage: 0.5, // Must own at least 50%
         startDate: new Date('2026-01-01'),
         endDate: new Date('2026-06-30'),
         status: IncentiveStatus.ACTIVE,
@@ -37,6 +39,7 @@ export const incentives = [
         description: 'Bonus for bringing in new clients to the organization',
         type: IncentiveType.DEAL_PARTICIPATION,
         commissionPercentage: 0.035,
+        basePercentage: 0.25, // Must own at least 25%
         startDate: new Date('2026-02-01'),
         endDate: null, // Ongoing incentive
         status: IncentiveStatus.ACTIVE,

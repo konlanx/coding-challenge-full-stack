@@ -59,6 +59,7 @@ model Incentive {
   description           String?
   type                  IncentiveType   @default(DEAL_PARTICIPATION)
   commissionPercentage  Float
+  basePercentage        Float           @default(0)
   startDate             DateTime
   endDate               DateTime?
   status                IncentiveStatus @default(DRAFT)

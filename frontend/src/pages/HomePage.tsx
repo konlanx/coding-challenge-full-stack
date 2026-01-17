@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
+import { Award, TrendingUp, Briefcase } from 'lucide-react';
 import { organizationsClient, type Organization, type Employee } from '../api';
 import {
     Select,
@@ -116,6 +117,7 @@ export function HomePage() {
                             disabled={!selectedOrgId}
                             onClick={() => navigate(`/incentives/${selectedOrgId}`)}
                         >
+                            <Award className="mr-2 h-4 w-4" />
                             Manage Incentives
                         </Button>
                         <Button
@@ -123,6 +125,7 @@ export function HomePage() {
                             disabled={!selectedOrgId}
                             onClick={() => navigate(`/earnings/${selectedOrgId}`)}
                         >
+                            <TrendingUp className="mr-2 h-4 w-4" />
                             View Earnings
                         </Button>
                     </div>
@@ -178,6 +181,7 @@ export function HomePage() {
                                                             navigate(`/deals/${employee.id}`)
                                                         }
                                                     >
+                                                        <Briefcase className="mr-2 h-4 w-4" />
                                                         View Deals
                                                     </Button>
                                                 </TableCell>

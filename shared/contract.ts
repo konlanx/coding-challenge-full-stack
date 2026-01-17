@@ -178,18 +178,6 @@ export const earningsContract = c.router({
         },
         summary: 'Get all earnings for employees of an organization',
     },
-    getEmployeeEarnings: {
-        method: 'GET',
-        path: '/api/employees/:employeeId/earnings',
-        pathParams: z.object({
-            employeeId: z.uuid(),
-        }),
-        responses: {
-            200: z.array(EarningSchema),
-            404: z.object({ error: z.string() }),
-        },
-        summary: 'Get all earnings for a specific employee',
-    },
 });
 
 export type EarningsContract = typeof earningsContract;

@@ -174,6 +174,7 @@ export function IncentivesPage() {
                                 <TableRow>
                                     <TableHead>Name</TableHead>
                                     <TableHead>Commission</TableHead>
+                                    <TableHead>Base %</TableHead>
                                     <TableHead>Start Date</TableHead>
                                     <TableHead>End Date</TableHead>
                                     <TableHead>Beneficiaries</TableHead>
@@ -196,6 +197,9 @@ export function IncentivesPage() {
                                         </TableCell>
                                         <TableCell className="align-top">
                                             {formatPercentage(incentive.commissionPercentage)}
+                                        </TableCell>
+                                        <TableCell className="align-top">
+                                            {formatPercentage(incentive.basePercentage)}
                                         </TableCell>
                                         <TableCell className="align-top">
                                             {formatDate(incentive.startDate)}

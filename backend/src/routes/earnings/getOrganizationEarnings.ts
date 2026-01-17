@@ -79,6 +79,9 @@ export const getOrganizationEarningsHandler = async ({
                 );
                 if (!isBeneficiary) continue;
 
+                // Check if owner meets base percentage threshold
+                if (owner.percentage < incentive.basePercentage) continue;
+
                 // Calculate earning
                 const earning =
                     deal.value * owner.percentage * incentive.commissionPercentage;

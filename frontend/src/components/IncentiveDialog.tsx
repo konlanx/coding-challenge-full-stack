@@ -43,6 +43,7 @@ export function IncentiveDialog({
     const [name, setName] = useState('');
     const [description, setDescription] = useState('');
     const [commissionPercentage, setCommissionPercentage] = useState('');
+    const [basePercentage, setBasePercentage] = useState('');
     const [startDate, setStartDate] = useState('');
     const [endDate, setEndDate] = useState('');
     const [status, setStatus] = useState<IncentiveStatus>('DRAFT');
@@ -68,6 +69,7 @@ export function IncentiveDialog({
                 setName(incentive.name);
                 setDescription(incentive.description || '');
                 setCommissionPercentage(formatPercentageForInput(incentive.commissionPercentage * 100));
+                setBasePercentage(formatPercentageForInput(incentive.basePercentage * 100));
                 setStartDate(formatDateForInput(incentive.startDate));
                 setEndDate(incentive.endDate ? formatDateForInput(incentive.endDate) : '');
                 setStatus(incentive.status);
@@ -76,6 +78,7 @@ export function IncentiveDialog({
                 setName('');
                 setDescription('');
                 setCommissionPercentage('');
+                setBasePercentage('');
                 setStartDate('');
                 setEndDate('');
                 setStatus('DRAFT');
@@ -90,6 +93,12 @@ export function IncentiveDialog({
         return isNaN(num) || num <= 0 || num > 100;
     };
 
+    const isBasePercentageInvalid = (percentage: string): boolean => {
+        if (percentage === undefined || percentage === null || percentage.trim() === '') return true;
+        const num = parseFloat(percentage);
+        return isNaN(num) || num < 0 || num > 100;
+    };
+
     const isDateRangeInvalid = useCallback((): boolean => {
         if (!startDate || !endDate) return false;
         return new Date(startDate) >= new Date(endDate);
@@ -98,10 +107,11 @@ export function IncentiveDialog({
     const isValid = useMemo(() => {
         if (!name.trim()) return false;
         if (isPercentageInvalid(commissionPercentage)) return false;
+        if (isBasePercentageInvalid(basePercentage)) return false;
         if (!startDate) return false;
         return !isDateRangeInvalid();
 
-    }, [name, commissionPercentage, startDate, isDateRangeInvalid]);
+    }, [name, commissionPercentage, basePercentage, startDate, isDateRangeInvalid]);
 
     const addBeneficiary = (employeeId: string) => {
         if (!selectedBeneficiaryIds.includes(employeeId)) {
@@ -122,6 +132,7 @@ export function IncentiveDialog({
                 name: name.trim(),
                 description: description.trim() || undefined,
                 commissionPercentage: parseFloat(commissionPercentage) / 100,
+                basePercentage: parseFloat(basePercentage || '0') / 100,
                 startDate: formatDateForApi(startDate),
                 endDate: endDate ? formatDateForApi(endDate) : null,
                 status,
@@ -182,16 +193,17 @@ export function IncentiveDialog({
                 </DialogHeader>
 
                 <div className="space-y-4 py-4">
+                    <div className="space-y-2">
+                        <label className="text-sm font-medium">Name <span className="text-red-500">*</span></label>
+                        <Input
+                            placeholder="Enter incentive name"
+                            value={name}
+                            onChange={(e) => setName(e.target.value)}
+                            className={!name.trim() ? 'border-red-500 focus-visible:ring-red-500' : ''}
+                        />
+                    </div>
+
                     <div className="grid grid-cols-2 gap-4">
-                        <div className="space-y-2">
-                            <label className="text-sm font-medium">Name <span className="text-red-500">*</span></label>
-                            <Input
-                                placeholder="Enter incentive name"
-                                value={name}
-                                onChange={(e) => setName(e.target.value)}
-                                className={!name.trim() ? 'border-red-500 focus-visible:ring-red-500' : ''}
-                            />
-                        </div>
                         <div className="space-y-2">
                             <label className="text-sm font-medium">Commission (%) <span className="text-red-500">*</span></label>
                             <Input
@@ -202,6 +214,18 @@ export function IncentiveDialog({
                                 value={commissionPercentage}
                                 onChange={(e) => setCommissionPercentage(e.target.value)}
                                 className={isPercentageInvalid(commissionPercentage) ? 'border-red-500 focus-visible:ring-red-500' : ''}
+                            />
+                        </div>
+                        <div className="space-y-2">
+                            <label className="text-sm font-medium">Base Ownership (%) <span className="text-red-500">*</span></label>
+                            <Input
+                                type="number"
+                                min="0"
+                                max="100"
+                                placeholder="0"
+                                value={basePercentage}
+                                onChange={(e) => setBasePercentage(e.target.value)}
+                                className={isBasePercentageInvalid(basePercentage) ? 'border-red-500 focus-visible:ring-red-500' : ''}
                             />
                         </div>
                     </div>
