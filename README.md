@@ -1,236 +1,101 @@
-# Centify Case Study - Senior Full Stack Developer
+# Code challenge overview
 
-## Overview
+## Generative AI Disclaimer
 
-Build a simplified version of Centify, a commission management and sales performance tracking platform. This case study should take approximately **6 hours** to complete and demonstrate full-stack development capabilities.
+Generative AI (Claude Code Opus) has been used to aid with
 
-## Product Context
+- Unit test generation
+- Autocompletion during UI component development
+- Seed data generation for database seeding
 
-Centify helps sales organizations:
+## Architecture
 
-- Track deals and sales performance
-- Create incentive plans (commission structures) for sales reps
-- Calculate commissions based on deals and incentive plans
-- Monitor earnings and payouts
-- Manage sales team members
+The structure remained the same with a `backend` and `frontend` folder. A new `shared` folder has been created, which now hosts the contracts between frontend.
 
-## Scope & Requirements
+The project now utilises `ts-rest` to enable fully typesafe communication between frontend and backend. All data is validated using `zod`.
+`ts-rest` is also being used to register routes and data handlers.
 
-### Core Features to Implement
+I have opted for `vite` as the build tool in both `frontend` and `backend`.
 
-#### 1. **Deals Management** (2 hours)
+All the expected technology has been used, even though I am unfamiliar with some of the chosen technologies. I hope to highlight my willingness and ability to work with unknown technologies and frameworks with this choice.
 
-**Backend:**
+### Code structure
 
-- REST API endpoints for CRUD operations on deals
-- Store deal information: name, value (revenue amount), close date
-- Support multi-tenancy (organization scoping)
-- Support splitting deal value between multiple owners:
-  - Each deal can have multiple owners
-  - Each owner has a split percentage (e.g., 60% of the deal value)
-  - Sum of all split percentages for a deal must equal 100%
-- Basic validation:
-  - At least one owner required per deal
-  - Split percentages must sum to exactly 1.0 (100%)
-  - Each split percentage must be between 0 and 1
-- Error handling
+#### Backend
 
-**Frontend:**
+`index.ts`  
+Contains the basic express configuration
 
-- Deals list page with table view
-- Create/Edit deal form (modal or separate page)
-- Deal split management:
-  - Add/remove multiple owners per deal
-  - Set split percentage for each owner
-  - Visual indicator showing total split percentage (must equal 100%)
-  - Display all owners and their percentages
-- Display: Deal name, value, close date, owners (with percentages)
-- Basic filtering by owner
-- Responsive design
+`/prisma/`  
+Contains the prisma schema, migrations and seeding scripts
 
-#### 2. **Employees Management** (0.5 hours)
+`/src/prisma.ts`  
+Contains the prisma connection
 
-**Backend:**
+`/src/routes/`  
+Contains the data resolvers for CRUD operations and earnings calculation
 
-- REST API endpoints for listing employees
-- Store employee information: first name, last name, email
-- Support multi-tenancy (organization scoping)
-- Simple GET endpoint (no CRUD needed for case study)
+#### Frontend
 
-**Frontend:**
+`/src/components/`  
+Contains shadcn components as well as custom components that can be reused
 
-- Employee dropdown/select in deal form
-- Display employee name in deals table
+`/src/pages/`  
+Contains the logic for the pages available in the frontend application
 
-#### 3. **Incentives Management** (2.5 hours)
+## Divergences to the acceptance criteria
 
-**Backend:**
+The UI structure has been altered slightly, such that a dashboard is loaded on the landing page where the user can select an organisation, sees the employees of that organisation and can open their deals and earnings reports from there. This choice has been made in favor of better usability. This does not impact the scope of the functionality.
 
-- REST API endpoints for CRUD operations on incentives
-- Store incentive information:
-  - Name, description
-  - Type: `DEAL_PARTICIPATION` (only this type for simplicity)
-  - Base commission percentage (e.g., 10%)
-  - Start date, end date (optional)
-  - Status: `ACTIVE`, `DRAFT`, or `INACTIVE`
-- Support multi-tenancy (organization scoping)
-- Link incentives to multiple employees (beneficiaries who are eligible for commission)
-- Basic validation:
-  - End date must be after start date (if provided)
-  - Commission percentage must be between 0 and 1
-  - At least one beneficiary (employee) must be assigned
+## Testing instructions
 
-**Frontend:**
+To locally start the full application in production mode, in the root folder use
 
-- Incentives list page
-- Create/Edit incentive form with:
-  - Basic details (name, description, dates, status)
-  - Commission percentage input
-  - Multi-select for beneficiaries (employees)
-- Display: Incentive name, commission %, date range, status, beneficiary count
-- Link incentives to employees
+```shell
+docker-compose up --build
+```
 
-#### 4. **Earnings Calculation** (1 hour)
+This builds containers for both the `backend` and `frontend` components, as well as initializes a PostgreSQL container.
 
-**Backend:**
+The docker compose is zero configuration and does not need to be updated.
+The docker container automatically seeds its database
 
-- Calculate earnings for each employee based on deals and active incentives
-- Endpoint: `GET /api/org/:orgId/earnings`
-- Logic:
-  - For each deal with a close date within an active incentive's date range
-  - For each owner of the deal:
-    - If the owner is a beneficiary of the incentive
-    - Calculate earnings: `deal.value × owner's split percentage × incentive commission percentage`
-    - This accounts for the owner's share of the deal
-  - Sum all earnings per employee per incentive
-- Return: Employee ID, employee name, incentive ID, incentive name, total earnings, deal count, total deal value
+## Preview
 
-**Frontend:**
+![Dashboard](images/dashboard.png)
 
-- Earnings dashboard/table
-- Display: Employee name, incentive name, total earnings, deal count, total revenue
-- Format currency properly
-- Group by employee or incentive (toggle or tabs)
+![Deals](images/deals.png)
 
-### Technical Requirements
+![Deals Dialog](images/deals-dialog.png)
 
-#### Backend Stack
+![Earnings](images/earnings.png)
 
-- **Framework**: Express.js or Fastify
-- **Database**: PostgreSQL with Prisma ORM (or TypeORM/Sequelize)
-- **Language**: TypeScript
-- **Validation**: Zod or similar
-- **API**: RESTful endpoints with JSON responses
+![Incentives](images/incentives.png)
 
-#### Frontend Stack
+![Incentive Dialog](images/incentive-dialog.png)
 
-- **Framework**: React with TypeScript
-- **UI Library**: Tailwind CSS (or similar utility-first CSS)
-- **State Management**: React Query / TanStack Query (or Context API)
-- **Table Component**: TanStack Table (or similar)
-- **HTTP Client**: Axios or fetch
-- **Build Tool**: Vite or Create React App
+## Challenges
 
-#### Database Design
+### Time
 
-You are responsible for designing the database schema. Consider:
+The biggest challenge by far were time constraints.
 
-- Multi-tenancy support (organizations)
-- Relationships between entities (deals, employees, incentives)
-- Many-to-many relationships (deals ↔ employees with splits, incentives ↔ employees)
-- Data integrity constraints
-- Appropriate indexes for query performance
-- Timestamps for audit trails
+Even though I kept typing all the time (making The Primeagen proud with my VIM skills) and used generative AI to speed up UI component and unit test development, just checking documentation from time to time and taking only one restroom break, I was unable to complete the assigned task in under 6 hours.
 
-### Deliverables
+Given the amount of code I have produced, I do not believe it is possible to complete the assignment in the expected time and create an acceptable result.
 
-1. **Working Application**
+### UUID issues
 
-   - Backend API running locally
-   - Frontend application running locally
-   - Database with seed data:
-     - At least 3-4 employees
-     - 8-12 deals (with various owners and split percentages, some deals with multiple owners)
-     - 2-3 active incentives (with different beneficiaries and commission rates)
+Utilizing both ZOD and Prisma, I quickly realized that the automatically generated UUIDs by Prisma did not pass the ZOD schema validation.
 
-2. **Code Quality**
+This issue cost some time to debug and find a solution for, even though the solution turned out to be quite simple - I just generated the IDs myself.
 
-   - Clean, readable code
-   - TypeScript types properly defined
-   - Basic error handling
-   - Consistent code style
+### Prisma issues
 
-3. **Documentation**
-   - README with setup instructions
-   - API endpoint documentation (can be inline comments or simple markdown)
-   - Brief explanation of architectural decisions
-   - Database schema documentation (explain your design choices)
+Following the Prisma documentation for the initial setup, I encountered an issue where the database was unreachable.
 
-### Evaluation Criteria
+It turned out that the dotenv import was missing, which is a super easy fix, but being unfamiliar with Prisma this issue cost me some time.
 
-1. **Functionality** (40%)
+### Ambiguous acceptance criteria
 
-   - All core features implemented and working
-   - Data flows correctly between frontend and backend
-   - Earnings calculations are accurate (accounting for deal splits)
-   - Incentive-to-employee relationships work correctly
-   - Deal splits are properly validated and calculated
-
-2. **Code Quality** (30%)
-
-   - Clean, maintainable code
-   - Proper TypeScript usage
-   - Error handling
-   - Code organization
-   - Database schema design and relationships properly modeled
-
-3. **User Experience** (20%)
-
-   - Intuitive UI
-   - Responsive design
-   - Good visual feedback
-   - Clear display of commission calculations
-
-4. **Technical Decisions** (10%)
-   - Appropriate technology choices
-   - Database schema design (especially many-to-many relationships and data integrity)
-   - API design
-   - Calculation logic correctness
-
-### Out of Scope (Don't Implement)
-
-- CRM integrations (HubSpot, Salesforce, etc.)
-- Complex commission calculations (tiers, accelerators, etc.)
-- Multiple incentive types (only DEAL_PARTICIPATION)
-- Clawbacks and adjustments
-- Targets/quotas
-- Advanced filtering/search
-- Pagination (can use simple lists)
-- Real-time updates
-- File uploads
-- Email notifications
-- Authentication (assume organizationId is passed as a parameter or header)
-- Payout management
-- Commission adjustments/rules
-
-### Getting Started
-
-1. Set up project structure (monorepo or separate repos)
-2. Initialize database and run migrations
-3. Create seed data (employees, deals with splits, incentives with beneficiaries)
-4. Build backend API endpoints
-5. Build frontend pages
-6. Implement deal split management UI
-7. Implement earnings calculation (accounting for splits)
-8. Test end-to-end flow (create incentive → assign beneficiaries → create deals with splits → view earnings)
-9. Write documentation
-
-### Bonus Points (Optional)
-
-- Unit tests for critical logic (earnings calculation)
-- Docker setup for easy running
-- Basic data validation on frontend
-- Loading states and error messages
-- Date formatting and currency formatting
-- Visual representation of earnings (charts or graphs)
-- Filter earnings by incentive or employee
+Even though the acceptance criteria was clear in hindsight, during implementation I had to iterate on multiple criteria, because they were not clear to me during the first read through.
