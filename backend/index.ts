@@ -1,4 +1,5 @@
 import express, { Request, Response } from 'express';
+import dealRoutes from './src/routes/deals';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -7,10 +8,9 @@ const PORT = process.env.PORT || 3000;
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Basic route
-app.get('/', (req: Request, res: Response) => {
-  res.json({ message: 'Welcome to the Express API server' });
-});
+// API routes
+app.use('/api', dealRoutes)
+
 
 // Health check route
 app.get('/health', (req: Request, res: Response) => {
