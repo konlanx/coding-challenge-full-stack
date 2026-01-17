@@ -6,6 +6,9 @@ import {
     UpdateDealSchema,
     OrganizationSchema,
     EmployeeSchema,
+    IncentiveSchema,
+    CreateIncentiveSchema,
+    UpdateIncentiveSchema,
 } from './schemas';
 
 const c = initContract();
@@ -98,3 +101,66 @@ export const organizationsContract = c.router({
 export type DealsContract = typeof dealsContract;
 export type OrganizationsContract = typeof organizationsContract;
 
+export const incentivesContract = c.router({
+    getIncentives: {
+        method: 'GET',
+        path: '/api/organizations/:orgId/incentives',
+        pathParams: z.object({
+            orgId: z.string(),
+        }),
+        responses: {
+            200: z.array(IncentiveSchema),
+        },
+        summary: 'Get all incentives for an organization',
+    },
+    getIncentive: {
+        method: 'GET',
+        path: '/api/incentives/:id',
+        pathParams: z.object({
+            id: z.uuid(),
+        }),
+        responses: {
+            200: IncentiveSchema,
+            404: z.object({ error: z.string() }),
+        },
+        summary: 'Get a single incentive by ID',
+    },
+    createIncentive: {
+        method: 'POST',
+        path: '/api/incentives',
+        body: CreateIncentiveSchema,
+        responses: {
+            201: IncentiveSchema,
+            400: z.object({ errors: z.unknown() }),
+        },
+        summary: 'Create a new incentive',
+    },
+    updateIncentive: {
+        method: 'PUT',
+        path: '/api/incentives/:id',
+        pathParams: z.object({
+            id: z.uuid(),
+        }),
+        body: UpdateIncentiveSchema,
+        responses: {
+            200: IncentiveSchema,
+            400: z.object({ errors: z.unknown() }),
+            404: z.object({ error: z.string() }),
+        },
+        summary: 'Update an existing incentive',
+    },
+    deleteIncentive: {
+        method: 'DELETE',
+        path: '/api/incentives/:id',
+        pathParams: z.object({
+            id: z.uuid(),
+        }),
+        responses: {
+            204: z.undefined(),
+            404: z.object({ error: z.string() }),
+        },
+        summary: 'Delete an incentive',
+    },
+});
+
+export type IncentivesContract = typeof incentivesContract;

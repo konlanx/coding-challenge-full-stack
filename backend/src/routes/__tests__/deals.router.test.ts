@@ -351,7 +351,7 @@ describe('deleteDeal', () => {
         expect(result.body).toEqual({ error: 'Deal not found' });
     });
 
-    it('should delete deal and return 200', async () => {
+    it('should delete deal and return 204', async () => {
         const existingDeal = { id: validDealId, name: 'Deal to Delete', value: 1000 };
 
         vi.mocked(prisma.deal.findUnique).mockResolvedValue(existingDeal as any);
@@ -372,8 +372,7 @@ describe('deleteDeal', () => {
 
         expect(prisma.deal.findUnique).toHaveBeenCalledWith({ where: { id: validDealId } });
         expect(prisma.$transaction).toHaveBeenCalled();
-        expect(result.status).toBe(200);
-        expect(result.body).toEqual({ success: true });
+        expect(result.status).toBe(204);
     });
 });
 
