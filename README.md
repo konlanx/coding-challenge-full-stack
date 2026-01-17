@@ -60,6 +60,10 @@ This builds containers for both the `backend` and `frontend` components, as well
 The docker compose is zero configuration and does not need to be updated.
 The docker container automatically seeds its database.
 
+After container initialisation, the application is available at
+
+http://localhost
+
 ## Local development
 
 Create the respective `.env` files:
