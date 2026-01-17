@@ -1,5 +1,15 @@
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router';
+import { DealsPage } from './pages/DealsPage';
+
 function App() {
-  return <h1 className="text-3xl font-bold underline">Hello world!</h1>;
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/deals/:ownerId" element={<DealsPage />} />
+        <Route path="*" element={<Navigate to="/deals/placeholder" replace />} />
+      </Routes>
+    </BrowserRouter>
+  );
 }
 
 export default App;

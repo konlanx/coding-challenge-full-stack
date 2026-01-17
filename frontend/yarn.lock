@@ -993,6 +993,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@ts-rest/core@npm:^3.53.0-rc.1":
+  version: 3.53.0-rc.1
+  resolution: "@ts-rest/core@npm:3.53.0-rc.1"
+  peerDependencies:
+    "@types/node": ^18.18.7 || >=20.8.4
+  peerDependenciesMeta:
+    "@types/node":
+      optional: true
+  checksum: 10/ad17b1ab5cc656d42f83be7a7f4079c4981f1c6e70d198c9d8502e60d125677d584bc3715f24f103c9ecfccfeeaff5b9a42dc9de3479ed49a97f900db9b274d2
+  languageName: node
+  linkType: hard
+
 "@tybys/wasm-util@npm:^0.10.1":
   version: 0.10.1
   resolution: "@tybys/wasm-util@npm:0.10.1"
@@ -2445,6 +2457,7 @@ __metadata:
     "@eslint/js": "npm:^9.39.1"
     "@radix-ui/react-slot": "npm:^1.2.4"
     "@tailwindcss/vite": "npm:^4.1.17"
+    "@ts-rest/core": "npm:^3.53.0-rc.1"
     "@types/node": "npm:^24.10.2"
     "@types/react": "npm:^19.2.5"
     "@types/react-dom": "npm:^19.2.3"
@@ -2466,6 +2479,7 @@ __metadata:
     typescript: "npm:~5.9.3"
     typescript-eslint: "npm:^8.46.4"
     vite: "npm:^7.2.4"
+    zod: "npm:^4"
   languageName: unknown
   linkType: soft
 
@@ -3202,5 +3216,12 @@ __metadata:
   version: 4.1.13
   resolution: "zod@npm:4.1.13"
   checksum: 10/0679190318928f69fcb07751063719de232c663b13955fcdb55db59839569d39f3f29b955cb0cba7af0b724233f88c06b3e84c550397ad4e68f8088fa6799d88
+  languageName: node
+  linkType: hard
+
+"zod@npm:^4":
+  version: 4.3.5
+  resolution: "zod@npm:4.3.5"
+  checksum: 10/3148bd52e56ab7c1641ec397e6be6eddbb1d8f5db71e95baab9bb9622a0ea49d8a385885fc1c22b90fa6d8c5234e051f4ef5d469cfe3fb90198d5a91402fd89c
   languageName: node
   linkType: hard

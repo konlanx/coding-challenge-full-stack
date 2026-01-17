@@ -8,6 +8,12 @@ To install the dependencies, run
 yarn install
 ```
 
+To create the environment, run
+
+```shell
+cp .env.example .env
+```
+
 ## Migration
 
 To migrate the database, run

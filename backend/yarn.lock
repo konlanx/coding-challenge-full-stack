@@ -847,6 +847,28 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@ts-rest/core@npm:^3.53.0-rc.1":
+  version: 3.53.0-rc.1
+  resolution: "@ts-rest/core@npm:3.53.0-rc.1"
+  peerDependencies:
+    "@types/node": ^18.18.7 || >=20.8.4
+  peerDependenciesMeta:
+    "@types/node":
+      optional: true
+  checksum: 10/ad17b1ab5cc656d42f83be7a7f4079c4981f1c6e70d198c9d8502e60d125677d584bc3715f24f103c9ecfccfeeaff5b9a42dc9de3479ed49a97f900db9b274d2
+  languageName: node
+  linkType: hard
+
+"@ts-rest/express@npm:^3.53.0-rc.1":
+  version: 3.53.0-rc.1
+  resolution: "@ts-rest/express@npm:3.53.0-rc.1"
+  peerDependencies:
+    "@ts-rest/core": 3.53.0-rc.1
+    express: ^4.0.0 || ^5.0.0
+  checksum: 10/502a96f6cab4714924c5e8e809e5fdfb615f6cc5cd3948c5726a610cff2603f9b6def8feb990ffe3472f3bb7bc9f96f2a33f3db9407e3b964c1afc0a93eb2f84
+  languageName: node
+  linkType: hard
+
 "@types/body-parser@npm:*":
   version: 1.19.6
   resolution: "@types/body-parser@npm:1.19.6"
@@ -1130,6 +1152,8 @@ __metadata:
   dependencies:
     "@prisma/adapter-pg": "npm:^7.2.0"
     "@prisma/client": "npm:^7.2.0"
+    "@ts-rest/core": "npm:^3.53.0-rc.1"
+    "@ts-rest/express": "npm:^3.53.0-rc.1"
     "@types/cors": "npm:^2.8.19"
     "@types/express": "npm:^4.17.21"
     "@types/node": "npm:^25.0.9"

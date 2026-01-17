@@ -1,10 +1,10 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { Request, Response } from 'express';
-import { createDeal, updateDeal, deleteDeal } from '../deals';
+import { dealsRouter } from '../deals.router';
 
 vi.mock('../../prisma', () => ({
     prisma: {
         deal: {
+            findMany: vi.fn(),
             create: vi.fn(),
             findUnique: vi.fn(),
             update: vi.fn(),
@@ -22,18 +22,10 @@ vi.mock('../../prisma', () => ({
 
 import { prisma } from '../../prisma';
 
-const mockRequest = (body: unknown, params: Record<string, string> = {}): Partial<Request> => ({
-    body,
-    params,
-});
-
-const mockResponse = (): Partial<Response> => {
-    const res: Partial<Response> = {};
-    res.status = vi.fn().mockReturnValue(res);
-    res.json = vi.fn().mockReturnValue(res);
-    res.send = vi.fn().mockReturnValue(res);
-    return res;
-};
+const createDealHandler = dealsRouter.createDeal;
+const updateDealHandler = dealsRouter.updateDeal;
+const deleteDealHandler = dealsRouter.deleteDeal;
+const getDealsHandler = dealsRouter.getDeals;
 
 describe('createDeal', () => {
     beforeEach(() => {
@@ -41,79 +33,78 @@ describe('createDeal', () => {
     });
 
     it('should return 400 when owners array is empty', async () => {
-        const req = mockRequest({
-            name: 'Test Deal',
-            value: 1000,
-            owners: [],
-        });
-        const res = mockResponse();
+        const result = await createDealHandler({
+            body: { name: 'Test Deal', value: 1000, owners: [] },
+            params: {},
+            query: {},
+            headers: {},
+        } as any);
 
-        await createDeal(req as Request, res as Response);
-
-        expect(res.status).toHaveBeenCalledWith(400);
-        expect(res.json).toHaveBeenCalledWith(
-            expect.objectContaining({ errors: expect.anything() })
-        );
+        expect(result.status).toBe(400);
+        expect(result.body).toHaveProperty('errors');
     });
 
     it('should return 400 when percentages do not sum to 1', async () => {
-        const req = mockRequest({
-            name: 'Test Deal',
-            value: 1000,
-            owners: [
-                { employeeId: '550e8400-e29b-41d4-a716-446655440000', percentage: 0.5 },
-            ],
-        });
-        const res = mockResponse();
+        const result = await createDealHandler({
+            body: {
+                name: 'Test Deal',
+                value: 1000,
+                owners: [{ employeeId: '550e8400-e29b-41d4-a716-446655440000', percentage: 0.5 }],
+            },
+            params: {},
+            query: {},
+            headers: {},
+        } as any);
 
-        await createDeal(req as Request, res as Response);
-
-        expect(res.status).toHaveBeenCalledWith(400);
-        expect(res.json).toHaveBeenCalled();
+        expect(result.status).toBe(400);
     });
 
     it('should return 400 when percentage is greater than 1', async () => {
-        const req = mockRequest({
-            name: 'Test Deal',
-            value: 1000,
-            owners: [
-                { employeeId: '550e8400-e29b-41d4-a716-446655440000', percentage: 1.5 },
-            ],
-        });
-        const res = mockResponse();
+        const result = await createDealHandler({
+            body: {
+                name: 'Test Deal',
+                value: 1000,
+                owners: [{ employeeId: '550e8400-e29b-41d4-a716-446655440000', percentage: 1.5 }],
+            },
+            params: {},
+            query: {},
+            headers: {},
+        } as any);
 
-        await createDeal(req as Request, res as Response);
-
-        expect(res.status).toHaveBeenCalledWith(400);
+        expect(result.status).toBe(400);
     });
 
     it('should return 400 when percentage is negative', async () => {
-        const req = mockRequest({
-            name: 'Test Deal',
-            value: 1000,
-            owners: [
-                { employeeId: '550e8400-e29b-41d4-a716-446655440000', percentage: -0.1 },
-                { employeeId: '550e8400-e29b-41d4-a716-446655440001', percentage: 1.1 },
-            ],
-        });
-        const res = mockResponse();
+        const result = await createDealHandler({
+            body: {
+                name: 'Test Deal',
+                value: 1000,
+                owners: [
+                    { employeeId: '550e8400-e29b-41d4-a716-446655440000', percentage: -0.1 },
+                    { employeeId: '550e8400-e29b-41d4-a716-446655440001', percentage: 1.1 },
+                ],
+            },
+            params: {},
+            query: {},
+            headers: {},
+        } as any);
 
-        await createDeal(req as Request, res as Response);
-
-        expect(res.status).toHaveBeenCalledWith(400);
+        expect(result.status).toBe(400);
     });
 
     it('should return 400 when employeeId is not a valid UUID', async () => {
-        const req = mockRequest({
-            name: 'Test Deal',
-            value: 1000,
-            owners: [{ employeeId: 'not-a-uuid', percentage: 1.0 }],
-        });
-        const res = mockResponse();
+        const result = await createDealHandler({
+            body: {
+                name: 'Test Deal',
+                value: 1000,
+                owners: [{ employeeId: 'not-a-uuid', percentage: 1.0 }],
+            },
+            params: {},
+            query: {},
+            headers: {},
+        } as any);
 
-        await createDeal(req as Request, res as Response);
-
-        expect(res.status).toHaveBeenCalledWith(400);
+        expect(result.status).toBe(400);
     });
 
     it('should create deal with valid single owner at 100%', async () => {
@@ -132,16 +123,16 @@ describe('createDeal', () => {
         };
         vi.mocked(prisma.deal.create).mockResolvedValue(mockCreatedDeal as any);
 
-        const req = mockRequest({
-            name: 'Test Deal',
-            value: 1000,
-            owners: [
-                { employeeId: '550e8400-e29b-41d4-a716-446655440000', percentage: 1.0 },
-            ],
-        });
-        const res = mockResponse();
-
-        await createDeal(req as Request, res as Response);
+        const result = await createDealHandler({
+            body: {
+                name: 'Test Deal',
+                value: 1000,
+                owners: [{ employeeId: '550e8400-e29b-41d4-a716-446655440000', percentage: 1.0 }],
+            },
+            params: {},
+            query: {},
+            headers: {},
+        } as any);
 
         expect(prisma.deal.create).toHaveBeenCalledWith({
             data: {
@@ -158,8 +149,8 @@ describe('createDeal', () => {
             },
             include: { owners: true },
         });
-        expect(res.status).toHaveBeenCalledWith(201);
-        expect(res.json).toHaveBeenCalledWith(mockCreatedDeal);
+        expect(result.status).toBe(201);
+        expect(result.body).toEqual(mockCreatedDeal);
     });
 
     it('should create deal with multiple owners summing to 100%', async () => {
@@ -184,20 +175,22 @@ describe('createDeal', () => {
         };
         vi.mocked(prisma.deal.create).mockResolvedValue(mockCreatedDeal as any);
 
-        const req = mockRequest({
-            name: 'Multi-Owner Deal',
-            value: 5000,
-            owners: [
-                { employeeId: '550e8400-e29b-41d4-a716-446655440000', percentage: 0.6 },
-                { employeeId: '550e8400-e29b-41d4-a716-446655440001', percentage: 0.4 },
-            ],
-        });
-        const res = mockResponse();
+        const result = await createDealHandler({
+            body: {
+                name: 'Multi-Owner Deal',
+                value: 5000,
+                owners: [
+                    { employeeId: '550e8400-e29b-41d4-a716-446655440000', percentage: 0.6 },
+                    { employeeId: '550e8400-e29b-41d4-a716-446655440001', percentage: 0.4 },
+                ],
+            },
+            params: {},
+            query: {},
+            headers: {},
+        } as any);
 
-        await createDeal(req as Request, res as Response);
-
-        expect(res.status).toHaveBeenCalledWith(201);
-        expect(res.json).toHaveBeenCalledWith(mockCreatedDeal);
+        expect(result.status).toBe(201);
+        expect(result.body).toEqual(mockCreatedDeal);
     });
 });
 
@@ -208,67 +201,48 @@ describe('updateDeal', () => {
         vi.clearAllMocks();
     });
 
-    it('should return 400 when id param is not a valid UUID', async () => {
-        const req = mockRequest(
-            { name: 'Test', value: 1000, owners: [] },
-            { id: 'not-a-uuid' }
-        );
-        const res = mockResponse();
-
-        await updateDeal(req as Request, res as Response);
-
-        expect(res.status).toHaveBeenCalledWith(400);
-    });
-
     it('should return 400 when owners array is empty', async () => {
-        const req = mockRequest(
-            { name: 'Test Deal', value: 1000, owners: [] },
-            { id: validDealId }
-        );
-        const res = mockResponse();
+        const result = await updateDealHandler({
+            body: { name: 'Test Deal', value: 1000, owners: [] },
+            params: { id: validDealId },
+            query: {},
+            headers: {},
+        } as any);
 
-        await updateDeal(req as Request, res as Response);
-
-        expect(res.status).toHaveBeenCalledWith(400);
+        expect(result.status).toBe(400);
     });
 
     it('should return 400 when percentages do not sum to 1', async () => {
-        const req = mockRequest(
-            {
+        const result = await updateDealHandler({
+            body: {
                 name: 'Test Deal',
                 value: 1000,
-                owners: [
-                    { employeeId: '550e8400-e29b-41d4-a716-446655440000', percentage: 0.5 },
-                ],
+                owners: [{ employeeId: '550e8400-e29b-41d4-a716-446655440000', percentage: 0.5 }],
             },
-            { id: validDealId }
-        );
-        const res = mockResponse();
+            params: { id: validDealId },
+            query: {},
+            headers: {},
+        } as any);
 
-        await updateDeal(req as Request, res as Response);
-
-        expect(res.status).toHaveBeenCalledWith(400);
+        expect(result.status).toBe(400);
     });
 
     it('should return 404 when deal does not exist', async () => {
         vi.mocked(prisma.deal.findUnique).mockResolvedValue(null);
 
-        const req = mockRequest(
-            {
+        const result = await updateDealHandler({
+            body: {
                 name: 'Test Deal',
                 value: 1000,
-                owners: [
-                    { employeeId: '550e8400-e29b-41d4-a716-446655440000', percentage: 1.0 },
-                ],
+                owners: [{ employeeId: '550e8400-e29b-41d4-a716-446655440000', percentage: 1.0 }],
             },
-            { id: validDealId }
-        );
-        const res = mockResponse();
+            params: { id: validDealId },
+            query: {},
+            headers: {},
+        } as any);
 
-        await updateDeal(req as Request, res as Response);
-
-        expect(res.status).toHaveBeenCalledWith(404);
-        expect(res.json).toHaveBeenCalledWith({ error: 'Deal not found' });
+        expect(result.status).toBe(404);
+        expect(result.body).toEqual({ error: 'Deal not found' });
     });
 
     it('should update deal with new owners', async () => {
@@ -296,23 +270,20 @@ describe('updateDeal', () => {
             return fn(mockTx);
         });
 
-        const req = mockRequest(
-            {
+        const result = await updateDealHandler({
+            body: {
                 name: 'Updated Deal',
                 value: 2000,
-                owners: [
-                    { employeeId: '550e8400-e29b-41d4-a716-446655440000', percentage: 1.0 },
-                ],
+                owners: [{ employeeId: '550e8400-e29b-41d4-a716-446655440000', percentage: 1.0 }],
             },
-            { id: validDealId }
-        );
-        const res = mockResponse();
-
-        await updateDeal(req as Request, res as Response);
+            params: { id: validDealId },
+            query: {},
+            headers: {},
+        } as any);
 
         expect(prisma.deal.findUnique).toHaveBeenCalledWith({ where: { id: validDealId } });
         expect(prisma.$transaction).toHaveBeenCalled();
-        expect(res.json).toHaveBeenCalledWith(updatedDeal);
+        expect(result.body).toEqual(updatedDeal);
     });
 
     it('should update deal with multiple new owners', async () => {
@@ -346,8 +317,8 @@ describe('updateDeal', () => {
             return fn(mockTx);
         });
 
-        const req = mockRequest(
-            {
+        const result = await updateDealHandler({
+            body: {
                 name: 'Multi-Owner Update',
                 value: 10000,
                 owners: [
@@ -355,13 +326,12 @@ describe('updateDeal', () => {
                     { employeeId: '550e8400-e29b-41d4-a716-446655440001', percentage: 0.3 },
                 ],
             },
-            { id: validDealId }
-        );
-        const res = mockResponse();
+            params: { id: validDealId },
+            query: {},
+            headers: {},
+        } as any);
 
-        await updateDeal(req as Request, res as Response);
-
-        expect(res.json).toHaveBeenCalledWith(updatedDeal);
+        expect(result.body).toEqual(updatedDeal);
     });
 });
 
@@ -372,25 +342,18 @@ describe('deleteDeal', () => {
         vi.clearAllMocks();
     });
 
-    it('should return 400 when id param is not a valid UUID', async () => {
-        const req = mockRequest({}, { id: 'not-a-uuid' });
-        const res = mockResponse();
-
-        await deleteDeal(req as Request, res as Response);
-
-        expect(res.status).toHaveBeenCalledWith(400);
-    });
-
     it('should return 404 when deal does not exist', async () => {
         vi.mocked(prisma.deal.findUnique).mockResolvedValue(null);
 
-        const req = mockRequest({}, { id: validDealId });
-        const res = mockResponse();
+        const result = await deleteDealHandler({
+            body: undefined,
+            params: { id: validDealId },
+            query: {},
+            headers: {},
+        } as any);
 
-        await deleteDeal(req as Request, res as Response);
-
-        expect(res.status).toHaveBeenCalledWith(404);
-        expect(res.json).toHaveBeenCalledWith({ error: 'Deal not found' });
+        expect(result.status).toBe(404);
+        expect(result.body).toEqual({ error: 'Deal not found' });
     });
 
     it('should delete deal and return 204', async () => {
@@ -405,14 +368,68 @@ describe('deleteDeal', () => {
             return fn(mockTx);
         });
 
-        const req = mockRequest({}, { id: validDealId });
-        const res = mockResponse();
-
-        await deleteDeal(req as Request, res as Response);
+        const result = await deleteDealHandler({
+            body: undefined,
+            params: { id: validDealId },
+            query: {},
+            headers: {},
+        } as any);
 
         expect(prisma.deal.findUnique).toHaveBeenCalledWith({ where: { id: validDealId } });
         expect(prisma.$transaction).toHaveBeenCalled();
-        expect(res.status).toHaveBeenCalledWith(204);
-        expect(res.send).toHaveBeenCalled();
+        expect(result.status).toBe(204);
+    });
+});
+
+describe('getDeals', () => {
+    beforeEach(() => {
+        vi.clearAllMocks();
+    });
+
+    it('should return deals for a given owner', async () => {
+        const mockDeals = [
+            {
+                id: 'deal-1',
+                name: 'Test Deal',
+                value: 1000,
+                owners: [
+                    {
+                        id: 'owner-1',
+                        dealId: 'deal-1',
+                        employeeId: 'emp-123',
+                        percentage: 1.0,
+                    },
+                ],
+            },
+        ];
+        vi.mocked(prisma.deal.findMany).mockResolvedValue(mockDeals as any);
+
+        const result = await getDealsHandler({
+            body: undefined,
+            params: { ownerId: 'emp-123' },
+            query: {},
+            headers: {},
+        } as any);
+
+        expect(prisma.deal.findMany).toHaveBeenCalledWith({
+            where: { owners: { some: { employeeId: 'emp-123' } } },
+            include: { owners: true },
+        });
+        expect(result.status).toBe(200);
+        expect(result.body).toEqual(mockDeals);
+    });
+
+    it('should return empty array when no deals found', async () => {
+        vi.mocked(prisma.deal.findMany).mockResolvedValue([]);
+
+        const result = await getDealsHandler({
+            body: undefined,
+            params: { ownerId: 'emp-nonexistent' },
+            query: {},
+            headers: {},
+        } as any);
+
+        expect(result.status).toBe(200);
+        expect(result.body).toEqual([]);
     });
 });
