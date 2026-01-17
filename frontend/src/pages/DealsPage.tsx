@@ -1,6 +1,7 @@
 import { useEffect, useState, useCallback } from 'react';
 import { useParams } from 'react-router';
-import { Plus } from 'lucide-react';
+import { Plus, Trash2 } from 'lucide-react';
+import { toast } from 'sonner';
 import { dealsClient, organizationsClient, type Deal, type Employee } from '../api';
 import {
     Table,
@@ -11,6 +12,16 @@ import {
     TableRow,
 } from '../components/ui/table';
 import { Button } from '../components/ui/button';
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+} from '../components/ui/alert-dialog';
 import { OwnersList } from '../components/OwnersList';
 import { AddDealDialog } from '../components/AddDealDialog';
 
@@ -28,6 +39,8 @@ export function DealsPage() {
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
+    const [dealToDelete, setDealToDelete] = useState<Deal | null>(null);
+    const [isDeleting, setIsDeleting] = useState(false);
 
     const loadDeals = useCallback(async () => {
         if (!ownerId) return;
@@ -40,6 +53,29 @@ export function DealsPage() {
             console.log(err);
         }
     }, [ownerId]);
+
+    const handleDeleteDeal = async () => {
+        if (!dealToDelete) return;
+
+        setIsDeleting(true);
+        try {
+            const result = await dealsClient.deleteDeal({
+                params: { id: dealToDelete.id },
+            });
+
+            if (result.status === 204) {
+                toast.success('Deal deleted successfully');
+                setDealToDelete(null);
+                loadDeals();
+            } else {
+                toast.error('Failed to delete deal');
+            }
+        } catch {
+            toast.error('Failed to delete deal');
+        } finally {
+            setIsDeleting(false);
+        }
+    };
 
     useEffect(() => {
         if (!ownerId) return;
@@ -134,6 +170,7 @@ export function DealsPage() {
                                     <TableHead>Name</TableHead>
                                     <TableHead>Value</TableHead>
                                     <TableHead>Owners</TableHead>
+                                    <TableHead className="w-16"></TableHead>
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
@@ -143,6 +180,16 @@ export function DealsPage() {
                                         <TableCell className="align-top">{formatCurrency(deal.value)}</TableCell>
                                         <TableCell className="align-top">
                                             <OwnersList owners={deal.owners} currentEmployeeId={ownerId} />
+                                        </TableCell>
+                                        <TableCell className="align-top">
+                                            <Button
+                                                variant="ghost"
+                                                size="icon"
+                                                className="text-destructive hover:text-destructive hover:bg-destructive/10"
+                                                onClick={() => setDealToDelete(deal)}
+                                            >
+                                                <Trash2 className="h-4 w-4" />
+                                            </Button>
                                         </TableCell>
                                     </TableRow>
                                 ))}
@@ -159,6 +206,27 @@ export function DealsPage() {
                 organizationId={employee?.organizationId ?? ''}
                 onSuccess={loadDeals}
             />
+
+            <AlertDialog open={!!dealToDelete} onOpenChange={(open) => !open && setDealToDelete(null)}>
+                <AlertDialogContent>
+                    <AlertDialogHeader>
+                        <AlertDialogTitle>Delete Deal</AlertDialogTitle>
+                        <AlertDialogDescription>
+                            Are you sure you want to delete "{dealToDelete?.name}"? This action cannot be undone.
+                        </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                        <AlertDialogCancel disabled={isDeleting}>Cancel</AlertDialogCancel>
+                        <AlertDialogAction
+                            onClick={handleDeleteDeal}
+                            disabled={isDeleting}
+                            className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                        >
+                            {isDeleting ? 'Deleting...' : 'Delete'}
+                        </AlertDialogAction>
+                    </AlertDialogFooter>
+                </AlertDialogContent>
+            </AlertDialog>
         </div>
     );
 }

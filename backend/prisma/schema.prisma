@@ -8,7 +8,7 @@ datasource db {
 }
 
 model Employee {
-  id              String      @id @default(cuid())
+  id              String      @id @default(uuid())
   firstName       String
   lastName        String
   email           String      @unique
@@ -19,20 +19,20 @@ model Employee {
 }
 
 model Organization {
-  id         String      @id @default(cuid())
+  id         String      @id @default(uuid())
   name       String
   employees  Employee[]
 }
 
 model Deal {
-  id        String      @id @default(cuid())
+  id        String      @id @default(uuid())
   name      String
   value     Float
   owners    DealOwner[]
 }
 
 model DealOwner {
-  id           String   @id @default(cuid())
+  id           String   @id @default(uuid())
   dealId       String
   employeeId   String
   percentage   Float
@@ -52,7 +52,7 @@ enum IncentiveType {
 }
 
 model Incentive {
-  id                    String          @id @default(cuid())
+  id                    String          @id @default(uuid())
   organizationId        String
   name                  String
   description           String?

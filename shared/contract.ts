@@ -53,11 +53,10 @@ export const dealsContract = c.router({
             id: z.uuid(),
         }),
         responses: {
-            204: z.undefined(),
+            200: z.object({ success: z.boolean() }),
             400: z.object({ errors: z.unknown() }),
             404: z.object({ error: z.string() }),
         },
-        body: z.undefined(),
         summary: 'Delete a deal',
     },
 });
