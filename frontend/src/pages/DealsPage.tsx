@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router';
-import { apiClient, type Deal } from '../api';
+import { dealsClient, type Deal } from '../api';
 import {
     Table,
     TableBody,
@@ -30,7 +30,7 @@ export function DealsPage() {
             try {
                 setIsLoading(true);
                 setError(null);
-                const result = await apiClient.getDeals({ params: { ownerId } });
+                const result = await dealsClient.getDeals({ params: { ownerId } });
                 if (result.status === 200) {
                     setDeals(result.body);
                 } else {

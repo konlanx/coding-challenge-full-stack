@@ -1,19 +1,19 @@
 import express, { Request, Response } from 'express';
 import cors from 'cors';
 import { createExpressEndpoints } from '@ts-rest/express';
-import { dealsContract } from '@shared/contract';
+import { dealsContract, organizationsContract } from '@shared/contract';
 import { dealsRouter } from './src/routes/deals.router';
+import { organizationsRouter } from './src/routes/organizations.router';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Middleware
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// ts-rest API routes
 createExpressEndpoints(dealsContract, dealsRouter, app);
+createExpressEndpoints(organizationsContract, organizationsRouter, app);
 
 // Health check route
 app.get('/health', (req: Request, res: Response) => {

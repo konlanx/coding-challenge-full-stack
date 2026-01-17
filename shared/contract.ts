@@ -1,6 +1,12 @@
 import { initContract } from '@ts-rest/core';
 import { z } from 'zod';
-import { DealSchema, CreateDealSchema, UpdateDealSchema } from './schemas';
+import {
+    DealSchema,
+    CreateDealSchema,
+    UpdateDealSchema,
+    OrganizationSchema,
+    EmployeeSchema,
+} from './schemas';
 
 const c = initContract();
 
@@ -56,4 +62,28 @@ export const dealsContract = c.router({
     },
 });
 
+export const organizationsContract = c.router({
+    getOrganizations: {
+        method: 'GET',
+        path: '/api/organizations',
+        responses: {
+            200: z.array(OrganizationSchema),
+        },
+        summary: 'Get all organizations',
+    },
+    getEmployees: {
+        method: 'GET',
+        path: '/api/organizations/:orgId/employees',
+        pathParams: z.object({
+            orgId: z.string(),
+        }),
+        responses: {
+            200: z.array(EmployeeSchema),
+        },
+        summary: 'Get all employees for an organization',
+    },
+});
+
 export type DealsContract = typeof dealsContract;
+export type OrganizationsContract = typeof organizationsContract;
+

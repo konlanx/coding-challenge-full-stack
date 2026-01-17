@@ -38,7 +38,22 @@ export const CreateDealSchema = z.object({
 
 export const UpdateDealSchema = CreateDealSchema;
 
+export const OrganizationSchema = z.object({
+    id: z.string(),
+    name: z.string(),
+});
+
+export const EmployeeSchema = z.object({
+    id: z.string(),
+    firstName: z.string(),
+    lastName: z.string(),
+    email: z.string(),
+    organizationId: z.string(),
+});
+
 export type DealOwner = z.infer<typeof DealOwnerSchema>;
 export type Deal = z.infer<typeof DealSchema>;
 export type CreateDealInput = z.infer<typeof CreateDealSchema>;
 export type UpdateDealInput = z.infer<typeof UpdateDealSchema>;
+export type Organization = z.infer<typeof OrganizationSchema>;
+export type Employee = z.infer<typeof EmployeeSchema>;
