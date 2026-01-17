@@ -8,6 +8,7 @@
     "build": "tsc",
     "start": "node dist/index.js",
     "dev": "tsx watch index.ts",
+    "test": "vitest",
     "db:migrations:apply": "npx prisma generate",
     "db:migrations:generate": "npx prisma migrate dev --name",
     "db:seed": "npx tsx ./prisma/seed/seed.ts"
@@ -20,7 +21,8 @@
     "@prisma/adapter-pg": "^7.2.0",
     "@prisma/client": "^7.2.0",
     "dotenv": "^17.2.3",
-    "express": "^4.18.2"
+    "express": "^4.18.2",
+    "zod": "^4.3.5"
   },
   "devDependencies": {
     "@types/express": "^4.17.21",
@@ -28,6 +30,7 @@
     "prettier": "^3.7.4",
     "prisma": "^7.2.0",
     "tsx": "^4.7.0",
-    "typescript": "^5.3.3"
+    "typescript": "^5.3.3",
+    "vitest": "^4.0.17"
   }
 }
