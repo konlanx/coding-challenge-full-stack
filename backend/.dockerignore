@@ -1,0 +1,29 @@
+# Dependencies
+node_modules
+
+# Build output
+dist
+
+# Development files
+.env
+.env.local
+.env*.local
+*.log
+
+# IDE
+.idea
+.vscode
+*.swp
+*.swo
+
+# Git
+.git
+.gitignore
+
+# Prisma
+*.db
+*.db-journal
+
+# Test
+coverage
+.vitest

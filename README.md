@@ -82,6 +82,8 @@ The biggest challenge by far were time constraints.
 
 Even though I kept typing all the time (making The Primeagen proud with my VIM skills) and used generative AI to speed up UI component and unit test development, just checking documentation from time to time and taking only one restroom break, I was unable to complete the assigned task in under 6 hours.
 
+Overall I needed a little over 8 hours to complete the given assignment.
+
 Given the amount of code I have produced, I do not believe it is possible to complete the assignment in the expected time and create an acceptable result.
 
 ### UUID issues
