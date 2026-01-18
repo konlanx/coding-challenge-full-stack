@@ -25,3 +25,19 @@ export function formatDateForInput(isoString: string): string {
 export function formatDateForApi(dateString: string): string {
   return new Date(dateString).toISOString();
 }
+
+export function formatCurrency(value: number): string {
+  return new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+  }).format(value);
+}
+
+export function formatDate(dateString: string | null): string {
+  if (!dateString) return '-';
+  return new Date(dateString).toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+  });
+}

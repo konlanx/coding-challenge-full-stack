@@ -24,21 +24,8 @@ import {
 } from '../components/ui/alert-dialog';
 import { OwnersList } from '../components/OwnersList';
 import { DealDialog } from '../components/DealDialog';
-
-function formatCurrency(value: number): string {
-    return new Intl.NumberFormat('en-US', {
-        style: 'currency',
-        currency: 'USD',
-    }).format(value);
-}
-
-function formatDate(dateString: string): string {
-    return new Date(dateString).toLocaleDateString('en-US', {
-        year: 'numeric',
-        month: 'short',
-        day: 'numeric',
-    });
-}
+import { DealsEarningsChart } from '../components/DealsEarningsChart';
+import { formatCurrency, formatDate } from '../lib/utils';
 
 export function DealsPage() {
     const { ownerId } = useParams<{ ownerId: string }>();
@@ -192,9 +179,9 @@ export function DealsPage() {
                             <TableHeader>
                                 <TableRow>
                                     <TableHead>Name</TableHead>
-                                    <TableHead>Value</TableHead>
                                     <TableHead>Close Date</TableHead>
                                     <TableHead>Owners</TableHead>
+                                    <TableHead className="text-right">Value</TableHead>
                                     <TableHead className="w-16"></TableHead>
                                 </TableRow>
                             </TableHeader>
@@ -202,11 +189,11 @@ export function DealsPage() {
                                 {deals.map((deal) => (
                                     <TableRow key={deal.id}>
                                         <TableCell className="font-medium align-top">{deal.name}</TableCell>
-                                        <TableCell className="align-top">{formatCurrency(deal.value)}</TableCell>
                                         <TableCell className="align-top">{formatDate(deal.closeDate)}</TableCell>
                                         <TableCell className="align-top">
                                             <OwnersList owners={deal.owners} currentEmployeeId={ownerId} />
                                         </TableCell>
+                                        <TableCell className="align-top text-right font-medium text-green-600 tabular-nums">{formatCurrency(deal.value)}</TableCell>
                                         <TableCell className="align-top">
                                             <div className="flex gap-1">
                                                 <Button
@@ -235,6 +222,8 @@ export function DealsPage() {
                         </Table>
                     </div>
                 )}
+
+                <DealsEarningsChart deals={deals} currentEmployeeId={ownerId} />
             </div>
 
             <DealDialog

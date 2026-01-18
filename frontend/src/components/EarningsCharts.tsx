@@ -9,6 +9,7 @@ import {
     type ChartConfig,
 } from './ui/chart';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
+import { formatCurrency } from '../lib/utils';
 
 interface EmployeeEarning {
     employeeId: string;
@@ -29,6 +30,18 @@ interface EarningsChartsProps {
     earningsByIncentive: IncentiveEarning[];
 }
 
+interface ChartDataItem {
+    name: string;
+    value: number;
+    fill: string;
+}
+
+interface EarningsPieChartProps {
+    title: string;
+    data: ChartDataItem[];
+    config: ChartConfig;
+}
+
 const CHART_COLORS = [
     'var(--color-chart-1)',
     'var(--color-chart-2)',
@@ -37,11 +50,49 @@ const CHART_COLORS = [
     'var(--color-chart-5)',
 ];
 
-function formatCurrency(value: number): string {
-    return new Intl.NumberFormat('en-US', {
-        style: 'currency',
-        currency: 'USD',
-    }).format(value);
+function EarningsPieChart({ title, data, config }: EarningsPieChartProps) {
+    return (
+        <Card>
+            <CardHeader>
+                <CardTitle>{title}</CardTitle>
+            </CardHeader>
+            <CardContent>
+                <ChartContainer
+                    config={config}
+                    className="mx-auto aspect-square max-h-[300px]"
+                >
+                    <PieChart>
+                        <ChartTooltip
+                            content={
+                                <ChartTooltipContent
+                                    nameKey="name"
+                                    formatter={(value) =>
+                                        formatCurrency(value as number)
+                                    }
+                                />
+                            }
+                        />
+                        <Pie
+                            data={data}
+                            dataKey="value"
+                            nameKey="name"
+                            cx="50%"
+                            cy="50%"
+                            outerRadius={100}
+                            innerRadius={20}
+                        >
+                            {data.map((entry, index) => (
+                                <Cell key={`cell-${index}`} fill={entry.fill} />
+                            ))}
+                        </Pie>
+                        <ChartLegend
+                            content={<ChartLegendContent nameKey="name" />}
+                        />
+                    </PieChart>
+                </ChartContainer>
+            </CardContent>
+        </Card>
+    );
 }
 
 export function EarningsCharts({
@@ -93,89 +144,18 @@ export function EarningsCharts({
     return (
         <div className="mt-8 grid grid-cols-1 gap-6 lg:grid-cols-2">
             {earningsByEmployee.length > 0 && (
-                <Card>
-                    <CardHeader>
-                        <CardTitle>Earnings by Employee</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                        <ChartContainer
-                            config={employeeChartConfig}
-                            className="mx-auto aspect-square max-h-[300px]"
-                        >
-                            <PieChart>
-                                <ChartTooltip
-                                    content={
-                                        <ChartTooltipContent
-                                            nameKey="name"
-                                            formatter={(value) =>
-                                                formatCurrency(value as number)
-                                            }
-                                        />
-                                    }
-                                />
-                                <Pie
-                                    data={employeeChartData}
-                                    dataKey="value"
-                                    nameKey="name"
-                                    cx="50%"
-                                    cy="50%"
-                                    outerRadius={100}
-                                    innerRadius={40}
-                                >
-                                    {employeeChartData.map((entry, index) => (
-                                        <Cell key={`cell-${index}`} fill={entry.fill} />
-                                    ))}
-                                </Pie>
-                                <ChartLegend
-                                    content={<ChartLegendContent nameKey="name" />}
-                                />
-                            </PieChart>
-                        </ChartContainer>
-                    </CardContent>
-                </Card>
+                <EarningsPieChart
+                    title="Earnings by Employee"
+                    data={employeeChartData}
+                    config={employeeChartConfig}
+                />
             )}
-
             {earningsByIncentive.length > 0 && (
-                <Card>
-                    <CardHeader>
-                        <CardTitle>Earnings by Incentive</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                        <ChartContainer
-                            config={incentiveChartConfig}
-                            className="mx-auto aspect-square max-h-[300px]"
-                        >
-                            <PieChart>
-                                <ChartTooltip
-                                    content={
-                                        <ChartTooltipContent
-                                            nameKey="name"
-                                            formatter={(value) =>
-                                                formatCurrency(value as number)
-                                            }
-                                        />
-                                    }
-                                />
-                                <Pie
-                                    data={incentiveChartData}
-                                    dataKey="value"
-                                    nameKey="name"
-                                    cx="50%"
-                                    cy="50%"
-                                    outerRadius={100}
-                                    innerRadius={40}
-                                >
-                                    {incentiveChartData.map((entry, index) => (
-                                        <Cell key={`cell-${index}`} fill={entry.fill} />
-                                    ))}
-                                </Pie>
-                                <ChartLegend
-                                    content={<ChartLegendContent nameKey="name" />}
-                                />
-                            </PieChart>
-                        </ChartContainer>
-                    </CardContent>
-                </Card>
+                <EarningsPieChart
+                    title="Earnings by Incentive"
+                    data={incentiveChartData}
+                    config={incentiveChartConfig}
+                />
             )}
         </div>
     );

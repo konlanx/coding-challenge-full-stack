@@ -13,13 +13,7 @@ import {
 import { Button } from '../components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../components/ui/tabs';
 import { EarningsCharts } from '../components/EarningsCharts';
-
-function formatCurrency(value: number): string {
-    return new Intl.NumberFormat('en-US', {
-        style: 'currency',
-        currency: 'USD',
-    }).format(value);
-}
+import { formatCurrency } from '../lib/utils';
 
 interface EmployeeEarning {
     employeeId: string;

@@ -23,17 +23,8 @@ import {
     AlertDialogTitle,
 } from '../components/ui/alert-dialog';
 import { Avatar, AvatarFallback } from '../components/ui/avatar';
-import { getInitials, formatPercentage } from '../lib/utils';
+import { getInitials, formatPercentage, formatDate } from '../lib/utils';
 import { IncentiveDialog } from '../components/IncentiveDialog';
-
-function formatDate(dateString: string | null): string {
-    if (!dateString) return '—';
-    return new Date(dateString).toLocaleDateString('en-US', {
-        year: 'numeric',
-        month: 'short',
-        day: 'numeric',
-    });
-}
 
 export function IncentivesPage() {
     const { orgId } = useParams<{ orgId: string }>();
