@@ -12,6 +12,7 @@ import {
 } from '../components/ui/table';
 import { Button } from '../components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../components/ui/tabs';
+import { EarningsCharts } from '../components/EarningsCharts';
 
 function formatCurrency(value: number): string {
     return new Intl.NumberFormat('en-US', {
@@ -150,70 +151,77 @@ export function EarningsPage() {
                         <p className="text-muted-foreground">No earnings found</p>
                     </div>
                 ) : (
-                    <Tabs defaultValue="by-employee" className="w-full">
-                        <TabsList>
-                            <TabsTrigger value="by-employee">By Employee</TabsTrigger>
-                            <TabsTrigger value="by-incentive">By Incentive</TabsTrigger>
-                        </TabsList>
+                    <>
+                        <Tabs defaultValue="by-employee" className="w-full">
+                            <TabsList>
+                                <TabsTrigger value="by-employee">By Employee</TabsTrigger>
+                                <TabsTrigger value="by-incentive">By Incentive</TabsTrigger>
+                            </TabsList>
 
-                        <TabsContent value="by-employee">
-                            <div className="rounded-lg border">
-                                <Table>
-                                    <TableHeader>
-                                        <TableRow>
-                                            <TableHead>Employee</TableHead>
-                                            <TableHead className="text-right">Payouts</TableHead>
-                                            <TableHead className="text-right">Total Earnings</TableHead>
-                                        </TableRow>
-                                    </TableHeader>
-                                    <TableBody>
-                                        {earningsByEmployee.map((item) => (
-                                            <TableRow key={item.employeeId}>
-                                                <TableCell className="font-medium">
-                                                    {item.employeeName}
-                                                </TableCell>
-                                                <TableCell className="text-right">
-                                                    {item.dealCount}
-                                                </TableCell>
-                                                <TableCell className="text-right font-medium text-green-600 tabular-nums">
-                                                    {formatCurrency(item.totalEarning)}
-                                                </TableCell>
+                            <TabsContent value="by-employee">
+                                <div className="rounded-lg border">
+                                    <Table>
+                                        <TableHeader>
+                                            <TableRow>
+                                                <TableHead>Employee</TableHead>
+                                                <TableHead className="text-right">Payouts</TableHead>
+                                                <TableHead className="text-right">Total Earnings</TableHead>
                                             </TableRow>
-                                        ))}
-                                    </TableBody>
-                                </Table>
-                            </div>
-                        </TabsContent>
+                                        </TableHeader>
+                                        <TableBody>
+                                            {earningsByEmployee.map((item) => (
+                                                <TableRow key={item.employeeId}>
+                                                    <TableCell className="font-medium">
+                                                        {item.employeeName}
+                                                    </TableCell>
+                                                    <TableCell className="text-right">
+                                                        {item.dealCount}
+                                                    </TableCell>
+                                                    <TableCell className="text-right font-medium text-green-600 tabular-nums">
+                                                        {formatCurrency(item.totalEarning)}
+                                                    </TableCell>
+                                                </TableRow>
+                                            ))}
+                                        </TableBody>
+                                    </Table>
+                                </div>
+                            </TabsContent>
 
-                        <TabsContent value="by-incentive">
-                            <div className="rounded-lg border">
-                                <Table>
-                                    <TableHeader>
-                                        <TableRow>
-                                            <TableHead>Incentive</TableHead>
-                                            <TableHead className="text-right">Payouts</TableHead>
-                                            <TableHead className="text-right">Total Earnings</TableHead>
-                                        </TableRow>
-                                    </TableHeader>
-                                    <TableBody>
-                                        {earningsByIncentive.map((item) => (
-                                            <TableRow key={item.incentiveId}>
-                                                <TableCell className="font-medium">
-                                                    {item.incentiveName}
-                                                </TableCell>
-                                                <TableCell className="text-right">
-                                                    {item.dealCount}
-                                                </TableCell>
-                                                <TableCell className="text-right font-medium text-green-600 tabular-nums">
-                                                    {formatCurrency(item.totalEarning)}
-                                                </TableCell>
+                            <TabsContent value="by-incentive">
+                                <div className="rounded-lg border">
+                                    <Table>
+                                        <TableHeader>
+                                            <TableRow>
+                                                <TableHead>Incentive</TableHead>
+                                                <TableHead className="text-right">Payouts</TableHead>
+                                                <TableHead className="text-right">Total Earnings</TableHead>
                                             </TableRow>
-                                        ))}
-                                    </TableBody>
-                                </Table>
-                            </div>
-                        </TabsContent>
-                    </Tabs>
+                                        </TableHeader>
+                                        <TableBody>
+                                            {earningsByIncentive.map((item) => (
+                                                <TableRow key={item.incentiveId}>
+                                                    <TableCell className="font-medium">
+                                                        {item.incentiveName}
+                                                    </TableCell>
+                                                    <TableCell className="text-right">
+                                                        {item.dealCount}
+                                                    </TableCell>
+                                                    <TableCell className="text-right font-medium text-green-600 tabular-nums">
+                                                        {formatCurrency(item.totalEarning)}
+                                                    </TableCell>
+                                                </TableRow>
+                                            ))}
+                                        </TableBody>
+                                    </Table>
+                                </div>
+                            </TabsContent>
+                        </Tabs>
+
+                        <EarningsCharts
+                            earningsByEmployee={earningsByEmployee}
+                            earningsByIncentive={earningsByIncentive}
+                        />
+                    </>
                 )}
             </div>
         </div>
